@@ -1,0 +1,82 @@
+---
+import ReviewCard from "../components/ReviewCard.astro";
+import ScrollSnap from "../components/ScrollSnap.astro";
+
+interface Review {
+  name: string;
+  text: string;
+  avatar?: string;
+}
+
+const reviews: Review[] = [
+  { 
+    name: "Марина Луина", 
+    text: "Я очень довольна результатами курса. Он помог мне лучше понять себя и свои эмоции.", 
+    avatar: "https://i.pravatar.cc/150?img=1" 
+  },
+  { 
+    name: "Ольга Лукина", 
+    text: "Курс стал для меня источником вдохновения и мотивации.", 
+    avatar: "https://i.pravatar.cc/150?img=2" 
+  },
+  { 
+    name: "Анастасия Орлова", 
+    text: "Этот курс подарил мне новые инсайты и помог выстроить здоровые отношения с собой.", 
+    avatar: "https://i.pravatar.cc/150?img=3" 
+  },
+  { 
+    name: "Елена Соколова", 
+    text: "Я научилась находить баланс и уверенность каждый день.", 
+    avatar: "https://i.pravatar.cc/150?img=4" 
+  },
+  { 
+    name: "Виктория Иванова", 
+    text: "Замечательный курс! Он дал мне практические инструменты для работы над собой.", 
+    avatar: "https://i.pravatar.cc/150?img=5" 
+  },
+  { 
+    name: "Дарья Кузнецова", 
+    text: "Очень благодарна за поддержку и знания, которые я получила здесь.", 
+    avatar: "https://i.pravatar.cc/150?img=6" 
+  },
+  { 
+    name: "Светлана Морозова", 
+    text: "Теперь я стала увереннее и спокойнее, лучше понимаю свои эмоции.", 
+    avatar: "https://i.pravatar.cc/150?img=7" 
+  },
+  { 
+    name: "Ирина Волкова", 
+    text: "Мне понравился формат занятий и атмосфера в группе.", 
+    avatar: "https://i.pravatar.cc/150?img=8" 
+  },
+];
+---
+
+<section id="reviews" class="reviews full-width">
+  <h1 class="reviews-title">Познакомьтесь с историями успеха</h2>
+
+  <ScrollSnap snapAlign="center">
+    {reviews.map((review) => (
+      <ReviewCard name={review.name} text={review.text} avatar={review.avatar} />
+    ))}
+  </ScrollSnap>
+</section>
+
+<style>
+.reviews {
+  margin-top: var(--space-l);
+  padding-block: var(--space-2xl);
+  padding-inline: var(--space-m);
+  background: var(--clr-pink-400);
+  height: 100svh;
+}
+
+.reviews-title {
+  font-size: var(--font-size-4);
+  font-weight: 600;
+  margin-bottom: var(--space-xl);
+  text-align: center;
+  color: var(--clr-neutral-900);
+}
+
+</style>

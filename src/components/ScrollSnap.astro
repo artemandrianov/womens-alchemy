@@ -1,0 +1,136 @@
+---
+import { initScrollSnap } from "./ScrollSnap.ts"
+
+interface Props {
+  showArrows?: boolean
+  snapType?: "mandatory" | "proximity"
+  snapAlign?: "start" | "center" | "end"
+  gap?: string
+}
+
+const {
+  showArrows = true,
+  snapType = "mandatory",
+  snapAlign = "start",
+  gap = "var(--space-s)",
+} = Astro.props
+---
+
+<div
+  class="scroll-snap-wrapper"
+  data-show-arrows={showArrows}
+  style={`--snap-type:${snapType};--snap-align:${snapAlign};--gap:${gap}`}
+>
+  {showArrows && (
+    <button
+      class="scroll-arrow scroll-arrow--left"
+      aria-label="Scroll left"
+      data-arrow="left"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="38" height="74" viewBox="0 0 38 74" fill="none">
+        <path d="M36 2L3 39.1212L36 72" stroke="white" stroke-width="4"/>
+      </svg>
+    </button>
+  )}
+
+  <div class="scroll-snap-container">
+    <slot />
+  </div>
+
+  {showArrows && (
+    <button
+      class="scroll-arrow scroll-arrow--right"
+      aria-label="Scroll right"
+      data-arrow="right"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="36" height="70" viewBox="0 0 36 70" fill="none">
+        <path d="M1.5 2L32.5 37L1.5 68" stroke="white" stroke-width="4"/>
+      </svg>
+    </button>
+  )}
+</div>
+
+<script type="module">
+  import { initScrollSnap } from "./ScrollSnap.ts"
+  const wrapper = document.querySelector(".scroll-snap-wrapper")
+  if (wrapper) initScrollSnap(wrapper)
+</script>
+
+<style>
+.scroll-snap-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.scroll-snap-container {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x var(--snap-type);
+  scroll-behavior: smooth;
+  gap: var(--gap);
+  padding: var(--space-xs);
+  align-items: stretch;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-padding: var(--space-xs);
+}
+
+.scroll-snap-container::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-snap-container > * {
+  scroll-snap-align: var(--snap-align);
+  flex-shrink: 0;
+}
+
+.scroll-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+
+  width: 40px;
+  height: 40px;
+  border: none;
+  font: inherit;
+  color: inherit;
+  background-color: transparent;
+  /* border-radius: 50%;
+  border: none;
+  background: var(--card-surface-1); */
+  color: var(--foreground-1);
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: var(--box-shadow);
+  transition: all 0.2s ease;
+}
+
+.scroll-arrow.hidden {
+  display: none;
+}
+
+.scroll-arrow--left svg:hover,
+.scroll-arrow--right svg:hover {
+  transform: translateY(0%) scale(1.1);
+}
+
+.scroll-arrow--left {
+  left: calc(-1 * var(--space-xl));
+}
+
+.scroll-arrow--right {
+  right: calc(-1 * var(--space-xl));
+}
+
+@media (max-width: 768px) {
+  .scroll-arrow {
+    display: none !important;
+  }
+}
+</style>

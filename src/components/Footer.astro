@@ -1,0 +1,114 @@
+---
+const { class: className } = Astro.props;
+---
+
+<footer class:list={["footer", className]}>
+  <div class="content flex-group flow">
+    <img src="../../public/logo.png" alt="Женская алхимия" class="logo" />
+    <nav>
+      <ul>
+        <li>
+          <a href="#howitworks">О курсе</a>
+        </li>
+        <li>
+          <a href="#about">Обо мне</a>
+        </li>
+        <li>
+          <a href="#pricing">Тарифы</a>
+        </li>
+        <li>
+          <a href="#reviews">Отзывы</a>
+        </li>
+        <li>
+          <a href="#contact">Оставить заявку</a>
+        </li>
+      </ul>
+    </nav>
+    <ul class="social">
+      <li>
+        <a href="https://t.me/trofimovaKsu" target="_blank" rel="noopener noreferrer">
+          <img src="../../public/nelzyagram.png" alt="">
+          <span>INST</span>
+        </a>
+      </li>
+      <li>
+        <a href="https://t.me/trofimovaKsu" target="_blank" rel="noopener noreferrer">
+          <img src="../../public/telegram.png" alt="">
+          <span>TG</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</footer>
+
+<style scoped>
+  footer {
+    --zero: 0;
+
+    container-name: header;
+    padding: var(--space-m) 0;
+    z-index: 3;
+
+    div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      height: 65px;
+      width: auto;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      margin: var(--zero);
+      padding: var(--zero);
+      gap: var(--space-xl);
+
+      li a {
+        text-decoration: none;
+        color: var(--foreground-1);
+        font-weight: bold;
+        transition: color 0.3s;
+        cursor: pointer;
+
+        &:hover {
+          color: var(--clr-accent-primary-hover);
+        }
+      }
+    }
+
+    .social {
+      list-style: none;
+      display: flex;
+      margin: var(--zero);
+      padding: var(--zero);
+      gap: var(--space-xl);
+
+      li {
+        a {
+          display: flex;
+          align-items: center;
+          gap: var(--space-s);
+          text-decoration: none;
+          color: var(--foreground-1);
+          font-weight: bold;
+          transition: color 0.3s;
+          cursor: pointer;
+
+          &:hover {
+            color: var(--clr-accent-primary-hover);
+          }
+
+          img {
+            height: 24px;
+            width: 24px;
+            object-fit: contain;
+          }
+        }
+      }
+    }
+  }
+</style>

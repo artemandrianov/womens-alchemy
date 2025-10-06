@@ -1,0 +1,66 @@
+---
+const { class: className } = Astro.props;
+---
+
+<header class:list={["header", className]}>
+  <div class="content flex-group flow">
+    <img src="../../public/logo.png" alt="Женская алхимия" class="logo" />
+    <nav>
+      <ul>
+        <li>
+          <a href="#howitworks">О курсе</a>
+        </li>
+        <li>
+          <a href="#about">Обо мне</a>
+        </li>
+        <li>
+          <a href="#pricing">Тарифы</a>
+        </li>
+        <li>
+          <a href="#reviews">Отзывы</a>
+        </li>
+        <li>
+          <a href="#contact">Оставить заявку</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style scoped>
+  header {
+    container-name: header;
+    padding: var(--space-m) 0;
+    z-index: 3;
+
+    div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      height: 65px;
+      width: auto;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+      gap: var(--space-xl);
+
+      li a {
+        text-decoration: none;
+        color: var(--foreground-1);
+        font-weight: bold;
+        transition: color 0.3s;
+
+        &:hover {
+          color: var(--clr-accent-primary-hover);
+        }
+      }
+    }
+  }
+</style>

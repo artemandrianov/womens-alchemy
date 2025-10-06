@@ -1,0 +1,99 @@
+---
+interface Props {
+  href?: string
+  class?: string
+  variant?: 'primary' | 'secondary' | 'neutral'
+  type?: 'button' | 'submit'
+  icon?: string
+  text?: string
+  id?: string
+}
+
+const {
+  href,
+  class: className,
+  variant = 'secondary',
+  type = 'button',
+  icon,
+  text,
+  id,
+} = Astro.props
+---
+
+{
+  href ? (
+    <a
+      href={href}
+      class:list={[
+        'cta-btn',
+        className,
+        { 'cta-btn--primary': variant === 'primary' },
+        `cta-btn--${variant}`,
+      ]}
+      {...(id && { id })}
+    >
+      {icon && <span class="cta-btn__icon">{icon}</span>}
+      <slot>{text}</slot>
+    </a>
+  ) : (
+    <button
+      {...(id && { id })}
+      type={type}
+      class:list={[
+        'cta-btn',
+        className,
+        { 'cta-btn--primary': variant === 'primary' },
+        `cta-btn--${variant}`,
+      ]}
+    >
+      {icon && <span class="cta-btn__icon">{icon}</span>}
+      <slot>{text}</slot>
+    </button>
+  )
+}
+
+<style>
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    color: var(--clr-accent-primary);
+    padding: var(--space-s) var(--space-l);
+    border: 2px solid var(--clr-accent-primary);
+    border-radius: var(--radius-button);
+    cursor: pointer;
+    inline-size: fit-content;
+    transition: all 0.3s ease;
+    font-size: var(--font-size-0);
+    text-decoration: none;
+    line-height: normal;
+  }
+
+  .cta-btn:hover,
+  .cta-btn:focus-visible {
+    background-color: var(--clr-accent-primary);
+    color: var(--clr-white);
+  }
+
+  .cta-btn:active {
+    background-color: var(--clr-accent-primary-active);
+    color: var(--clr-white);
+  }
+
+  .cta-btn--primary {
+    color: var(--clr-white);
+    background-color: var(--clr-accent-primary);
+  }
+
+  .cta-btn--primary:hover,
+  .cta-btn--primary:focus-visible {
+    background-color: transparent;
+    color: var(--clr-accent-primary);
+  }
+
+  .cta-btn--primary:active {
+    background-color: transparent;
+    color: var(--clr-accent-primary-active);
+  }
+</style>

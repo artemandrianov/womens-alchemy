@@ -1,0 +1,33 @@
+---
+import "../styles/global.css";
+import "../styles/variables.css";
+import Hero from "../layouts/Hero.astro";
+import HowItWorks from "../layouts/HowItWorks.astro";
+import About from "../layouts/About.astro";
+import Pricing from "../layouts/Pricing.astro";
+import ContactUs from "../layouts/ContactUs.astro"
+import Reviews from "../layouts/Reviews.astro";
+import Footer from "../components/Footer.astro"
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Женская алхимия: 4 стихии для трансформации</title>
+    <meta
+      name="description"
+      content="Курс Жeнская алхимия — 4 стихии для трансформации. Путь к раскрытию потенциала, уверенности и самовыражению."
+    />
+  </head>
+  <body class="primary-layout">
+    <Hero />
+    <HowItWorks />
+    <About />
+    <Pricing />
+    <Reviews />
+    <ContactUs />
+    <Footer />
+  </body>
+</html>

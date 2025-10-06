@@ -1,0 +1,117 @@
+---
+import Header from "../components/Header.astro";
+import Button from "../components/Button.astro";
+---
+
+<section class="hero">
+  <Header />
+  <div class="hero-content primary-layout">
+    <div class="content-text">
+      <div class="heading">
+        <h1>Открой свои <br /> новые грани со мной</h1>
+      </div>
+      <p>
+        4 стихии раскроют Ваши новые грани и помогут Вам заявить о себе этому
+        миру
+      </p>
+      <div class="cta-row">
+        <Button text="Выбрать тариф" variant="primary" href="#pricing" />
+        <Button text="Оставить заявку" href="#contact" />
+      </div>
+    </div>
+    <div class="content-img">
+      <img src="../../public/hero-img.png" alt="hero" />
+    </div>
+  </div>
+</section>
+
+<style scoped>
+  .hero {
+    display: flex;
+    flex-direction: column;
+    height: 100svh;
+  }
+
+  .hero-content {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding-block: var(--space-xl-2xl);
+    color: var(--clr-neutral-100);
+    text-align: start;
+    overflow: hidden;
+    gap: var(--space-xl);
+  }
+
+  .content-text {
+    flex: 1;
+  }
+
+  .content-img {
+    --header-height: 100px;
+    --footer-height: 100px;
+    --block-size: calc(100svh - var(--header-height) - var(--footer-height));
+    block-size: var(--block-size);
+  }
+
+  .content-img img {
+    height: 100%;
+    width: auto;
+    object-fit: cover;
+  }
+
+  .heading {
+    position: relative;
+    display: inline-block;
+  }
+
+  .heading h1 {
+    font-size: var(--font-size-5);
+    margin-bottom: var(--space-s);
+    line-height: 100%;
+    font-weight: 600;
+  }
+
+  .heading::before {
+    content: "";
+    position: absolute;
+    top: -5rem;
+    right: -9rem;
+    width: 250px;
+    height: 250px;
+    background: var(--clr-pink-400);
+    clip-path: path(
+      "M90.6385 0.128853L135.927 102.706L247.406 90.6385L144.829 135.927L156.896 247.406L111.607 144.829L0.128838 156.896L102.706 111.607L90.6385 0.128853Z"
+    );
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .hero-content p {
+    line-height: 100%;
+    font-weight: 400;
+    margin-bottom: var(--space-l);
+  }
+
+  .hero-content .cta-row {
+    display: flex;
+    gap: var(--space-m);
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 768px) {
+    .hero-content {
+      flex-direction: column;
+      text-align: center;
+      padding-block: var(--space-l-xl);
+    }
+    .content-img {
+      display: none;
+    }
+    .content-img img {
+      display: none;
+    }
+  }
+</style>

@@ -1,0 +1,289 @@
+---
+interface Step {
+  number: string;
+  title: string;
+  subtitle: string;
+  description: string;
+}
+
+const steps: Step[] = [
+  {
+    number: "1",
+    title: "Стихия Земля:",
+    subtitle: "Развитие уверенности",
+    description:
+      "Вы научитесь ценить себя и свои достижения, обретёте внутреннюю опору и станете увереннее в любых ситуациях.",
+  },
+  {
+    number: "2",
+    title: "Стихия Огонь:",
+    subtitle: "Смелое заявление о себе миру",
+    description:
+      "Я помогу вам раскрыться, поддержу вас на пути самовыражения, помогу смело и ярко заявить о себе, чтобы ваше присутствие было заметно и значимо.",
+  },
+  {
+    number: "3",
+    title: "Стихия Вода:",
+    subtitle: "Гармония и целостность",
+    description:
+      "Вы соедините все грани своей личности в единый поток: уверенность, самовыражение, женская манкая энергия и новые открытия сольются в гармонию. Это даст ощущение целостности, внутреннего равновесия и силы для дальнейшего пути.",
+  },
+  {
+    number: "4",
+    title: "Стихия Воздух:",
+    subtitle: "Открытие новых граней",
+    description:
+      "Вы узнаете о себе больше, откроете скрытые таланты и способности, которые сделают вашу жизнь глубже и ярче. Вы удивитесь, насколько богаты ваши внутренние ресурсы!",
+  },
+];
+---
+
+<section id="howitworks" class="full-width">
+  <div class="howitworks-header">
+    <h2>Женская алхимия:</h2>
+    <h3>4 стихии для трансформации</h3>
+  </div>
+
+  <div class="timeline">
+    {
+      steps.map((step) => (
+        <div class="step-wrapper">
+          <div class="step" data-step={step.number} aria-hidden="true">
+            <div class="points-wrapper">
+              <div class="point-left" />
+              <div class="point-right" />
+            </div>
+            <div class="text">
+              <h4>
+                {step.title}<br />
+                {step.subtitle}
+              </h4>
+              <p>{step.description}</p>
+            </div>
+          </div>
+        </div>
+      ))
+    }
+
+    <svg class="arc-svg" preserveAspectRatio="none" aria-hidden="true">
+      <path
+        class="line-top"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"></path>
+      <path
+        class="line-bottom"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"></path>
+      <path
+        class="arc-path"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"></path>
+    </svg>
+  </div>
+</section>
+
+<style>
+  #howitworks {
+    --row-gap: 90px;
+    --arc-offset: 10ch;
+    --text-width: 45ch;
+    --title-width: 26ch;
+    --point-size: 28px;
+    --color: var(--clr-pink-100);
+    --border-color: #333;
+    --border: 2px solid var(--border-color);
+    --margin-inline: 0;
+    --margin-block: 0;
+    --padding-inline: 0;
+    --padding-block: 0;
+
+    background: var(--clr-pink-400);
+    height: 100svh;
+    padding-bottom: var(--space-xl);
+  }
+
+  .howitworks-header {
+    padding: var(--space-2xl) 0 var(--space-l-xl) 0;
+    position: relative;
+    z-index: 0;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 2rem;
+      right: 0rem;
+      width: 100px;
+      height: 100px;
+      background: var(--clr-snow);
+      clip-path: path(
+        "M49.2807 0L55.9016 42.6598L98.5614 49.2807L55.9016 55.9016L49.2807 98.5614L42.6598 55.9016L0 49.2807L42.6598 42.6598L49.2807 0Z"
+      );
+      z-index: 1;
+      pointer-events: none;
+    }
+  }
+
+  .howitworks-header h2 {
+    font-size: var(--font-size-5);
+    font-weight: 600;
+    line-height: 100%;
+    text-align: start;
+    margin: 0;
+  }
+
+  .howitworks-header h3 {
+    font-size: var(--font-size-5);
+    font-weight: 600;
+    line-height: 100%;
+    text-align: end;
+    margin: 0;
+    text-transform: lowercase;
+  }
+
+  .timeline {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    justify-items: center;
+    row-gap: var(--row-gap);
+    column-gap: var(--space-s);
+  }
+
+  .step-wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .step {
+    text-align: left;
+    position: relative;
+    flex-grow: 1;
+    block-size: 100%;
+  }
+
+  .points-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-block: var(--margin-block);
+    margin-inline: var(--margin-inline);
+    padding-block: var(--padding-block);
+    padding-inline: var(--padding-inline);
+
+    .point-right,
+    .point-left {
+      width: var(--point-size);
+      height: var(--point-size);
+      border-radius: 50%;
+      background: var(--color);
+      border: var(--border-color);
+    }
+
+    .point-right {
+      --color: transparent;
+      --border-color: transparent;
+      margin-inline-end: var(--arc-offset);
+    }
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .text h4 {
+    width: var(--title-width);
+    text-wrap: balance;
+    font-weight: 600;
+    margin-bottom: 0;
+  }
+
+  .text p {
+    max-width: 400px;
+    width: var(--text-width);
+    margin: 0;
+  }
+
+  .arc-svg {
+    color: var(--clr-pink-100);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+</style>
+
+<script>
+  function updateTimelineWithArc(arcRadius = 35) {
+    const timeline = document.querySelector(".timeline");
+    if (!timeline) return;
+
+    const svg = timeline.querySelector(".arc-svg");
+    if (!svg) return;
+
+    const pathTop = svg.querySelector(".line-top");
+    const pathBottom = svg.querySelector(".line-bottom");
+    const arc = svg.querySelector(".arc-path");
+
+    const p1 = timeline.querySelector('.step[data-step="1"] .point-left');
+    const p2 = timeline.querySelector('.step[data-step="2"] .point-right');
+    const p3 = timeline.querySelector('.step[data-step="3"] .point-left');
+    const p4 = timeline.querySelector('.step[data-step="4"] .point-right');
+    const tRect = timeline.getBoundingClientRect();
+
+    const center = (el: Element) => {
+      const r = el.getBoundingClientRect();
+      return {
+        x: r.left - tRect.left + r.width / 2,
+        y: r.top - tRect.top + r.height / 2,
+      };
+    };
+
+    if (!p1 || !p2 || !p3 || !p4) return;
+
+    const c1 = center(p1);
+    const c2 = center(p2);
+    const c3 = center(p3);
+    const c4 = center(p4);
+
+    if (pathTop) {
+      pathTop.setAttribute("d", `M ${c1.x} ${c1.y} L ${c2.x} ${c2.y}`);
+    }
+
+    if (pathBottom) {
+      pathBottom.setAttribute("d", `M ${c3.x} ${c3.y} L ${c4.x} ${c4.y}`);
+    }
+
+    if (arc) {
+      arc.setAttribute(
+        "d",
+        `M ${c2.x} ${c2.y} A ${arcRadius} ${arcRadius} 0 0 1 ${c4.x} ${c4.y}`,
+      );
+    }
+
+    svg.setAttribute("viewBox", `0 0 ${tRect.width} ${tRect.height}`);
+  }
+
+  const arcRadius = 60;
+
+  window.addEventListener("load", () => updateTimelineWithArc(arcRadius));
+  window.addEventListener("resize", () => updateTimelineWithArc(arcRadius));
+  if ("ResizeObserver" in window) {
+    const timelineEl = document.querySelector(".timeline");
+    if (timelineEl) {
+      new ResizeObserver(() => updateTimelineWithArc(arcRadius)).observe(
+        timelineEl,
+      );
+    }
+  }
+</script>

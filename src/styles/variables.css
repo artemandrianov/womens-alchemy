@@ -1,0 +1,164 @@
+:root {
+  /* Font sizes */
+  /* @link https://utopia.fyi/type/calculator?c=320,16,1.2,1240,18,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
+
+  /* Step -2: 11.1111px → 11.52px */
+  --font-size--2: clamp(0.6944rem, 0.6856rem + 0.0444vw, 0.72rem);
+  /* Step -1: 13.3333px → 14.4px */
+  --font-size--1: clamp(0.8333rem, 0.8101rem + 0.1159vw, 0.9rem);
+  /* Step 0: 16px → 18px */
+  --font-size-0: clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem);
+  /* Step 1: 19.2px → 22.5px */
+  --font-size-1: clamp(1.2rem, 1.1283rem + 0.3587vw, 1.4063rem);
+  /* Step 2: 23.04px → 28.125px */
+  --font-size-2: clamp(1.44rem, 1.3295rem + 0.5527vw, 1.7578rem);
+  /* Step 3: 27.648px → 35.1563px */
+  --font-size-3: clamp(1.728rem, 1.5648rem + 0.8161vw, 2.1973rem);
+  /* Step 4: 33.1776px → 43.9453px */
+  --font-size-4: clamp(2.0736rem, 1.8395rem + 1.1704vw, 2.7466rem);
+  /* Step 5: 39.8131px → 54.9316px */
+  --font-size-5: clamp(2.4883rem, 2.1597rem + 1.6433vw, 3.4332rem);
+  /* Step 6: 47.7757px → 68.6646px */
+  --font-size-6: clamp(2.986rem, 2.5319rem + 2.2705vw, 4.2915rem);
+  /* Step 7: 57.3309px → 85.8307px */
+  --font-size-7: clamp(3.5832rem, 2.9636rem + 3.0978vw, 5.3644rem);
+  /* Step 8: 68.7971px → 107.2884px */
+  --font-size-8: clamp(4.2998rem, 3.463rem + 4.1838vw, 6.7055rem);
+  /* Step 9: 82.5565px → 134.1105px */
+  --font-size-9: clamp(5.1598rem, 4.039rem + 5.6037vw, 8.3819rem);
+  /* Step 10: 99.0678px → 167.6381px */
+  --font-size-10: clamp(6.1917rem, 4.7011rem + 7.4533vw, 10.4774rem);
+
+  --font-family-lora: "Lora", serif;
+  --font-family-moserrat: "Montserrat", sans-serif;;
+
+  /* Spacing */
+  /* @link https://utopia.fyi/space/calculator?c=320,16,1.2,1240,18,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
+
+  /* Space 3xs: 4px → 5px */
+  --space-3xs: clamp(0.25rem, 0.2283rem + 0.1087vw, 0.3125rem);
+  /* Space 2xs: 8px → 9px */
+  --space-2xs: clamp(0.5rem, 0.4783rem + 0.1087vw, 0.5625rem);
+  /* Space xs: 12px → 14px */
+  --space-xs: clamp(0.75rem, 0.7065rem + 0.2174vw, 0.875rem);
+  /* Space s: 16px → 18px */
+  --space-s: clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem);
+  /* Space m: 24px → 27px */
+  --space-m: clamp(1.5rem, 1.4348rem + 0.3261vw, 1.6875rem);
+  /* Space l: 32px → 36px */
+  --space-l: clamp(2rem, 1.913rem + 0.4348vw, 2.25rem);
+  /* Space xl: 48px → 54px */
+  --space-xl: clamp(3rem, 2.8696rem + 0.6522vw, 3.375rem);
+  /* Space 2xl: 64px → 72px */
+  --space-2xl: clamp(4rem, 3.8261rem + 0.8696vw, 4.5rem);
+  /* Space 3xl: 96px → 108px */
+  --space-3xl: clamp(6rem, 5.7391rem + 1.3043vw, 6.75rem);
+
+  /* One-up pairs */
+  /* Space 3xs-2xs: 4px → 9px */
+  --space-3xs-2xs: clamp(0.25rem, 0.1413rem + 0.5435vw, 0.5625rem);
+  /* Space 2xs-xs: 8px → 14px */
+  --space-2xs-xs: clamp(0.5rem, 0.3696rem + 0.6522vw, 0.875rem);
+  /* Space xs-s: 12px → 18px */
+  --space-xs-s: clamp(0.75rem, 0.6196rem + 0.6522vw, 1.125rem);
+  /* Space s-m: 16px → 27px */
+  --space-s-m: clamp(1rem, 0.7609rem + 1.1957vw, 1.6875rem);
+  /* Space m-l: 24px → 36px */
+  --space-m-l: clamp(1.5rem, 1.2391rem + 1.3043vw, 2.25rem);
+  /* Space l-xl: 32px → 54px */
+  --space-l-xl: clamp(2rem, 1.5217rem + 2.3913vw, 3.375rem);
+  /* Space xl-2xl: 48px → 72px */
+  --space-xl-2xl: clamp(3rem, 2.4783rem + 2.6087vw, 4.5rem);
+  /* Space 2xl-3xl: 64px → 108px */
+  --space-2xl-3xl: clamp(4rem, 3.0435rem + 4.7826vw, 6.75rem);
+
+  /* Border */
+  --radius-button: var(--space-l);
+  --border-radius: var(--space-m);
+  /* Custom pairs */
+  /* Space s-l: 16px → 36px */
+  --space-s-l: clamp(1rem, 0.5652rem + 2.1739vw, 2.25rem);
+  --negative-space-l: calc(-1 * var(--space-l));
+
+  --clr-white: light-dark(white, black);
+
+  /* Нейтральная палитра (для фонов и текста) */
+  
+/* Нейтральная палитра (база) */
+--clr-neutral-100: hsl(220, 10%, 10%);
+--clr-neutral-200: hsl(220, 10%, 20%);
+--clr-neutral-300: hsl(220, 10%, 30%);
+--clr-neutral-400: hsl(220, 10%, 40%);
+--clr-neutral-500: hsl(220, 10%, 50%);
+--clr-neutral-600: hsl(220, 10%, 60%);
+--clr-neutral-700: hsl(220, 10%, 70%);
+--clr-neutral-800: hsl(220, 10%, 85%);
+--clr-neutral-900: hsl(220, 10%, 95%);
+
+/* Luxury Pink */
+--clr-pink-100: hsl(340, 70%, 95%);
+--clr-pink-200: hsl(340, 65%, 85%);
+--clr-pink-300: hsl(340, 60%, 75%);
+--clr-pink-400: hsl(340, 55%, 65%);
+--clr-pink-500: hsl(340, 50%, 55%);
+--clr-pink-600: hsl(340, 45%, 45%);
+--clr-pink-700: hsl(340, 40%, 35%);
+--clr-pink-800: hsl(340, 35%, 25%);
+--clr-pink-900: hsl(340, 30%, 15%);
+
+/* White smoke */
+--clr-white-smoke: hsl(0, 0%, 95%);
+
+/* Snow */
+--clr-snow: hsl(340, 50%, 97%);
+
+/* Deep Navy */
+--clr-navy-500: hsl(220, 50%, 25%);
+--clr-navy-700: hsl(220, 40%, 15%);
+
+/* Переменные для динамической темы */
+/* Surface Colors */
+--surface-1: light-dark(var(--clr-neutral-100), var(--clr-neutral-900));
+--surface-2: light-dark(var(--clr-neutral-200), var(--clr-neutral-800));
+--surface-3: light-dark(var(--clr-neutral-300), var(--clr-neutral-700));
+--surface-4: light-dark(var(--clr-neutral-400), var(--clr-neutral-600));
+
+/* Foreground Text Colors */
+--foreground-1: light-dark(var(--clr-pink-800), var(--clr-pink-200));
+--foreground-2: light-dark(var(--clr-pink-600), var(--clr-pink-400));
+
+/* Accent Colors */
+--clr-accent-primary: light-dark(var(--clr-pink-400), var(--clr-pink-600)); 
+--clr-accent-primary-hover: light-dark(var(--clr-pink-600), var(--clr-pink-700));
+--clr-accent-primary-active: var(--clr-pink-500);
+
+--clr-accent-secondary: light-dark(var(--clr-sky-400), var(--clr-violet-500));
+--clr-accent-secondary-hover: light-dark(var(--clr-aqua-400), var(--clr-violet-600));
+
+/* Hero Section */
+--hero-foreground-1: light-dark(var(--clr-pink-200), var(--clr-violet-200));
+--hero-foreground-2: var(--clr-pink-400);
+--hero-surface-1: var(--clr-violet-700);
+
+/* Card Section */
+--card-surface-1: var(--clr-neutral-900);
+--card-surface-2: var(--clr-neutral-100);
+--card-surface-3: light-dark(var(--clr-neutral-800), var(--clr-neutral-200));
+--card-foreground-1: var(--clr-pink-600);
+--card-foreground-2: light-dark(var(--clr-neutral-600), var(--clr-neutral-400));
+
+/* Transparent Colors */
+--clr-transparent-light: hsl(0, 0%, 100% / 0.6); 
+--clr-transparent-dark: hsl(0, 0%, 0% / 0.6); 
+--clr-transparent: light-dark(var(--clr-transparent-light), var(--clr-transparent-dark));
+
+/* Shadows and glowings */
+--box-shadow: 0px 0px 20px 12px rgba(179, 120, 179, 0.15);
+
+  /* Utility */
+  --column-inlize-size: 450px;
+  --minimum-content-padding: var(--space-s, 1rem);
+  --content-max-width: 1240px;
+  --narrow-max-width: 1024px;
+  --popout-max-width: 1440px;
+}
