@@ -8,8 +8,8 @@ export function initScrollSnap(wrapper: HTMLElement | null) {
 
   function updateScrollState(): void {
     const canScrollLeft = container.scrollLeft > 0
-    const canScrollRight =
-      container.scrollLeft < container.scrollWidth - container.clientWidth
+    const canScrollRight = 
+      Math.ceil(container.scrollLeft) < container.scrollWidth - container.clientWidth
     
     if (!wrapper) return
 
@@ -46,8 +46,16 @@ export function initScrollSnap(wrapper: HTMLElement | null) {
     )
   })
 
-  container.addEventListener("scroll", updateScrollState)
-  container.addEventListener("wheel", handleWheel, { passive: false })
+  container.removeEventListener("scroll", updateScrollState);
+  container.removeEventListener("wheel", handleWheel);
 
   updateScrollState()
+
+  return () => {
+    container.removeEventListener("scroll", updateScrollState);
+    container.removeEventListener("wheel", handleWheel);
+    arrows.forEach(btn => {
+      btn.removeEventListener("click", () => scrollTo(btn.dataset.arrow as "left" | "right"));
+    });
+  };
 }
