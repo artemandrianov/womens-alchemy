@@ -46,16 +46,16 @@ export function initScrollSnap(wrapper: HTMLElement | null) {
     )
   })
 
-  container.removeEventListener("scroll", updateScrollState);
-  container.removeEventListener("wheel", handleWheel);
-
+  container.addEventListener("scroll", updateScrollState)
+  container.addEventListener("wheel", handleWheel, { passive: false })
+  
   updateScrollState()
 
   return () => {
-    container.removeEventListener("scroll", updateScrollState);
-    container.removeEventListener("wheel", handleWheel);
+    container.removeEventListener("scroll", updateScrollState)
+    container.removeEventListener("wheel", handleWheel)
     arrows.forEach(btn => {
       btn.removeEventListener("click", () => scrollTo(btn.dataset.arrow as "left" | "right"));
     });
-  };
+  }
 }

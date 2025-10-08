@@ -1,17 +1,17 @@
 ---
 interface Props {
-  showArrows?: boolean;
-  snapType?: "mandatory" | "proximity";
-  snapAlign?: "start" | "center" | "end";
-  gap?: string;
+  showArrows?: boolean
+  snapType?: "mandatory" | "proximity"
+  snapAlign?: "start" | "center" | "end"
+  gap?: string
 }
 
 const {
   showArrows = true,
   snapType = "mandatory",
-  snapAlign = "start",
-  gap = "var(--space-s)",
-} = Astro.props;
+  snapAlign = "center",
+  gap = "var(--space-m)",
+} = Astro.props
 ---
 
 <div
@@ -19,25 +19,23 @@ const {
   data-show-arrows={showArrows}
   style={`--snap-type:${snapType};--snap-align:${snapAlign};--gap:${gap}`}
 >
-  {
-    showArrows && (
-      <button
-        class="scroll-arrow scroll-arrow--left"
-        aria-label="Scroll left"
-        data-arrow="left"
+  {showArrows && (
+    <button
+      class="scroll-arrow scroll-arrow--left"
+      aria-label="Scroll left"
+      data-arrow="left"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="38"
+        height="74"
+        viewBox="0 0 38 74"
+        fill="none"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="38"
-          height="74"
-          viewBox="0 0 38 74"
-          fill="none"
-        >
-          <path d="M36 2L3 39.1212L36 72" stroke="white" stroke-width="4" />
-        </svg>
-      </button>
-    )
-  }
+        <path d="M36 2L3 39.1212L36 72" stroke="white" stroke-width="4" />
+      </svg>
+    </button>
+  )}
 
   <div
     class="scroll-snap-container"
@@ -46,105 +44,158 @@ const {
     <slot />
   </div>
 
-  {
-    showArrows && (
-      <button
-        class="scroll-arrow scroll-arrow--right"
-        aria-label="Scroll right"
-        data-arrow="right"
+  {showArrows && (
+    <button
+      class="scroll-arrow scroll-arrow--right"
+      aria-label="Scroll right"
+      data-arrow="right"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="36"
+        height="70"
+        viewBox="0 0 36 70"
+        fill="none"
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="36"
-          height="70"
-          viewBox="0 0 36 70"
-          fill="none"
-        >
-          <path d="M1.5 2L32.5 37L1.5 68" stroke="white" stroke-width="4" />
-        </svg>
-      </button>
-    )
-  }
+        <path d="M1.5 2L32.5 37L1.5 68" stroke="white" stroke-width="4" />
+      </svg>
+    </button>
+  )}
 </div>
 
-<script type="module" is:inline>
-  import { initScrollSnap } from "./ScrollSnap.ts";
-  window.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".scroll-snap-wrapper").forEach(initScrollSnap);
-  });
+<script is:inline>
+  function initScrollSnap(wrapper) {
+    if (!wrapper) return;
+
+    const container = wrapper.querySelector(".scroll-snap-container");
+    const arrows = wrapper.querySelectorAll(".scroll-arrow");
+
+    if (!container) return;
+
+    function updateScrollState() {
+      const canScrollLeft = container.scrollLeft > 0;
+      const canScrollRight =
+        Math.ceil(container.scrollLeft) <
+        container.scrollWidth - container.clientWidth;
+
+      wrapper
+        .querySelector(".scroll-arrow--left")
+        ?.classList.toggle("hidden", !canScrollLeft);
+      wrapper
+        .querySelector(".scroll-arrow--right")
+        ?.classList.toggle("hidden", !canScrollRight);
+    }
+
+    function scrollTo(direction) {
+      const firstChild = container.children[0];
+      if (!firstChild) return;
+
+      const itemWidth = firstChild.offsetWidth;
+      const gap = parseInt(getComputedStyle(container).gap) || 0;
+      const scrollAmount = itemWidth + gap;
+
+      container.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+
+    function handleWheel(e) {
+      e.preventDefault();
+      container.scrollBy({ left: e.deltaY, behavior: "smooth" });
+    }
+
+    arrows.forEach((btn) => {
+      btn.addEventListener("click", () =>
+        scrollTo(btn.dataset.arrow)
+      );
+    });
+
+    container.addEventListener("scroll", updateScrollState);
+    container.addEventListener("wheel", handleWheel, { passive: false });
+
+    updateScrollState();
+
+    return () => {
+      container.removeEventListener("scroll", updateScrollState);
+      container.removeEventListener("wheel", handleWheel);
+    };
+  }
+
+  document
+    .querySelectorAll(".scroll-snap-wrapper")
+    .forEach(initScrollSnap);
 </script>
 
 <style>
-  .scroll-snap-wrapper {
-    --card-width: 50%;
+.scroll-snap-wrapper {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  overflow: visible;
+}
 
-    position: relative;
-    block-size: fit-content;
-    overflow: visible;
-  }
+.scroll-snap-container {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: calc((100% - var(--gap)) / 2);
+  gap: var(--gap);
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x var(--snap-type);
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
 
-  .scroll-snap-container {
-    display: flex;
-    gap: var(--space-l);
-    overflow-x: auto;
-    scroll-snap-type: x var(--snap-type, mandatory);
-    scroll-behavior: smooth;
-    flex: 0 0 100%;
-    scroll-snap-align: start;
-  }
+.scroll-snap-container::-webkit-scrollbar {
+  display: none;
+}
 
-  .scroll-snap-container::-webkit-scrollbar {
-    display: none;
-  }
+.scroll-snap-container > * {
+  scroll-snap-align: var(--snap-align);
+  scroll-snap-stop: always;
+  height: 100%;
+  display: flex;
+}
 
-  .scroll-snap-container > * {
-    scroll-snap-align: var(--snap-align);
-    flex-shrink: 0;
-  }
+.scroll-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background-color: transparent;
+  color: var(--foreground-1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--box-shadow);
+  transition: all 0.2s ease;
+}
 
+.scroll-arrow.hidden {
+  display: none;
+}
+
+.scroll-arrow--left {
+  left: calc(-1 * var(--space-xl));
+}
+
+.scroll-arrow--right {
+  right: calc(-1 * var(--space-xl));
+}
+
+.scroll-arrow svg:hover {
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
   .scroll-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-
-    width: 40px;
-    height: 40px;
-    border: none;
-    font: inherit;
-    color: inherit;
-    background-color: transparent;
-    color: var(--foreground-1);
-    cursor: pointer;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    box-shadow: var(--box-shadow);
-    transition: all 0.2s ease;
+    display: none !important;
   }
-
-  .scroll-arrow.hidden {
-    display: none;
-  }
-
-  .scroll-arrow--left svg:hover,
-  .scroll-arrow--right svg:hover {
-    transform: translateY(0%) scale(1.1);
-  }
-
-  .scroll-arrow--left {
-    left: calc(-1 * var(--space-xl));
-  }
-
-  .scroll-arrow--right {
-    right: calc(-1 * var(--space-xl));
-  }
-
-  @media (max-width: 768px) {
-    .scroll-arrow {
-      display: none !important;
-    }
-  }
+}
 </style>
