@@ -7,12 +7,11 @@ import { pricingPlans } from "../data/pricingData";
   <div class="pricing-grid">
     {
       pricingPlans.map((plan, i) => (
-        <div class="pricing-card">
+        <div class={`pricing-card ${plan.popular ? "popular" : ""}`}>
+          {plan.popular && <div class="badge">Популярный выбор</div>}
           <h3 class="card-title" style={`background:${plan.color}`}>
             {plan.title}
           </h3>
-
-          <!-- обертка для скрытия -->
           <div class="features-wrapper" id={`features-${i}`}>
             <ul class="card-features">
               {plan.features.map((item) => (
@@ -33,10 +32,11 @@ import { pricingPlans } from "../data/pricingData";
 
           <div class="card-footer">
             <Button
+              href={`?tariff=${plan.id}#contact`}
               text="Купить сейчас"
               variant="primary"
-              data-plan={`${plan.title} (${plan.price})`}
-              />
+              class="buy-now"
+            />
             <p class="card-price">{plan.price}</p>
           </div>
         </div>
@@ -86,6 +86,22 @@ import { pricingPlans } from "../data/pricingData";
           btn.textContent = "Посмотреть ещё ↓"
           btn.setAttribute("aria-expanded", "false")
         }
+      })
+    })
+    
+    document.querySelectorAll(".buy-now").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault()
+
+        const url = new URL(window.location.href)
+        const newUrl = `${url.pathname}?tariff=${btn.getAttribute("href").match(/tariff=([^#]+)/)[1]}#contact`
+
+        history.pushState({}, "", newUrl)
+
+        const target = document.getElementById("contact")
+        if (target) target.scrollIntoView({ behavior: "smooth" })
+
+        window.dispatchEvent(new Event("urlchange"))
       })
     })
   })
@@ -203,5 +219,38 @@ import { pricingPlans } from "../data/pricingData";
     color: var(--clr-pink-500);
     font-weight: 600;
     font-size: var(--font-size-1);
+  }
+
+  .pricing-card {
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .pricing-card.popular {
+    border: 2px solid var(--clr-pink-500);
+    transform: scale(1.04);
+    box-shadow: 0 10px 20px rgba(255, 0, 120, 0.2);
+    z-index: 2;
+  }
+
+  .pricing-card:hover {
+    transform: scale(1.01);
+  }
+
+  .pricing-card.popular:hover {
+    transform: scale(1.06);
+  }
+
+  .badge {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    background: var(--clr-pink-500);
+    color: white;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
   }
 </style>
