@@ -48,25 +48,18 @@ import { pricingPlans } from "../data/pricingData";
 <script lang="ts">
   document.addEventListener("DOMContentLoaded", () => {
     const collapsedMax = 350
-
     document.querySelectorAll(".toggle-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
         const targetId = btn.getAttribute("data-target")
         if (!targetId) return
-
         const wrapper = document.getElementById(targetId)
-
         if (!wrapper) return
-
         const isExpanded = wrapper.classList.contains("expanded")
-
         if (!isExpanded) {
-          // EXPAND
           wrapper.style.maxHeight = wrapper.scrollHeight + "px"
           wrapper.classList.add("expanded")
           btn.textContent = "Скрыть ↑"
           btn.setAttribute("aria-expanded", "true")
-
           const onTransitionEnd = (e) => {
             if (e.propertyName === "max-height") {
               wrapper.style.maxHeight = "none"
@@ -75,27 +68,29 @@ import { pricingPlans } from "../data/pricingData";
           }
           wrapper.addEventListener("transitionend", onTransitionEnd)
         } else {
-          // COLLAPSE
           const current = wrapper.scrollHeight
-
           wrapper.style.maxHeight = current + "px"
           wrapper.offsetHeight
           wrapper.style.maxHeight = collapsedMax + "px"
           wrapper.classList.remove("expanded")
-
           btn.textContent = "Посмотреть ещё ↓"
           btn.setAttribute("aria-expanded", "false")
         }
       })
     })
-    
-    document.querySelectorAll(".buy-now").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
+
+    document.querySelectorAll(".buy-now").forEach((anchor) => {
+      anchor.addEventListener("click", (e) => {
         e.preventDefault()
+        const href = anchor.getAttribute("href") || ""
+        const m = href.match(/[?&]tariff=([^#&]+)/)
+        const planId = m ? decodeURIComponent(m[1]) : null
+        if (!planId) {
+          console.warn("buy-now: не смогли достать tariff из href:", href)
+          return
+        }
 
-        const url = new URL(window.location.href)
-        const newUrl = `${url.pathname}?tariff=${btn.getAttribute("href").match(/tariff=([^#]+)/)[1]}#contact`
-
+        const newUrl = `${window.location.pathname}?tariff=${encodeURIComponent(planId)}#contact`
         history.pushState({}, "", newUrl)
 
         const target = document.getElementById("contact")
@@ -106,6 +101,7 @@ import { pricingPlans } from "../data/pricingData";
     })
   })
 </script>
+
 
 <style scoped>
   .pricing {
