@@ -1,321 +1,199 @@
 ---
-import Button from "../components/Button.astro"
-import { pricingPlans } from "../data/pricingData"
-import { submitForm } from "../actions/formData"
+import { actions, isInputError } from "astro:actions";
+import { pricingPlans } from "../data/pricingData";
+import Button from "../components/Button.astro";
+import "../styles/global.css";
+import "../styles/variables.css";
 
-const result = Astro.getActionResult(submitForm)
+const result = Astro.getActionResult(actions.submitForm);
+const inputErrors = isInputError(result?.error) ? result.error.fields : {};
 ---
 
 <section id="contact" class="full-width">
   <h1 class="title">Оставить заявку</h1>
 
-  {result?.data?.success ? (
-    <p class="success-msg">✅ Заявка успешно отправлена!</p>
-  ) : (
-    <form method="POST" class="contact">
-      <div class="form-group">
-        <label for="name" class="visually-hidden">Имя и фамилия</label>
-        <input id="name" name="name" placeholder="Имя Фамилия" required />
-      </div>
+  <form method="POST" action={actions.submitForm} class="contact" aria-live="polite">
+    <div class="form-group">
+      <label for="name" class="visually-hidden">Имя и фамилия</label>
+      <input transition:persist id="name" name="name" placeholder="Имя Фамилия" aria-describedby="error" required />
+      {inputErrors.name && <p id="error">{inputErrors.name.join(',')}</p>}
+    </div>
 
-      <div class="form-group">
-        <label for="phone" class="visually-hidden">Телефон</label>
-        <input id="phone" name="phone" type="tel" placeholder="Телефон" required />
-      </div>
+    <div class="form-group">
+      <label for="phone" class="visually-hidden">Телефон</label>
+      <input transition:persist id="phone" name="phone" type="tel" placeholder="Телефон" aria-describedby="error" required />
+      {inputErrors.phone && <p id="error">{inputErrors.phone.join(',')}</p>}
+    </div>
 
-      <div class="form-group">
-        <label for="email" class="visually-hidden">Электронная почта</label>
-        <input id="email" name="email" type="email" placeholder="Почта" required />
-      </div>
+    <div class="form-group">
+      <label for="email" class="visually-hidden">Электронная почта</label>
+      <input transition:persist id="email" name="email" type="email" placeholder="Почта" aria-describedby="error" required />
+      {inputErrors.email && <p id="error">{inputErrors.email.join(',')}</p>}
+    </div>
 
-      <div class="form-group select-wrapper">
-        <select id="pricing-select" name="tariff" aria-hidden="true" tabindex="-1">
-          <option value="">Выберите тариф</option>
-          {pricingPlans.map(plan => (
-            <option value={plan.id}>{plan.title} — {plan.price}</option>
-          ))}
-        </select>
+    <div class="form-group">
+      <label for="pricing-select" class="visually-hidden">Выбор тарифа</label>
+      <select id="pricing-select" name="tariff" aria-describedby="error" required>
+        <option value="">Выберите тариф</option>
+        {pricingPlans.map(plan => (
+          <option value={plan.id}>
+            {plan.title} — {plan.price}
+          </option>
+        ))}
+      </select>
+    </div>
 
-        <div class="dropdown" id="dropdown-tariff">
-          <button type="button" class="dropdown-toggle">
-            <span id="dropdown-label">Выберите тариф</span>
-            <img src="/icons/arrow-dropdown.svg" class="select-arrow" alt="" />
-          </button>
-          <ul class="dropdown-menu">
-            {pricingPlans.map(plan => (
-              <li class="dropdown-item" data-value={plan.id}>
-                {plan.title} — {plan.price}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
+    <div class="form-actions">
+      <Button type="submit" text="Отправить заявку" variant="primary" />
+    </div>
 
-      <div class="form-actions">
-        <Button type="submit" text="Отправить заявку" variant="primary" />
-      </div>
-    </form>
-  )}
+    {result && !result.error && (
+      <p class="form-msg success">Заявка отправлена</p>
+    )}
+    {result && !result.error && (
+      <p class="form-msg error">Ошибка при отправке. Попробуйте снова</p>
+    )}
+  </form>
 </section>
 
 <script lang="ts">
-  document.addEventListener("DOMContentLoaded", () => {
-    const nativeSelect = document.getElementById("pricing-select")
-    const dropdown = document.getElementById("dropdown-tariff")
-    const toggle = dropdown?.querySelector(".dropdown-toggle")
-    const menu = dropdown?.querySelector(".dropdown-menu")
-    const label = document.getElementById("dropdown-label")
-    const items = Array.from(document.querySelectorAll(".dropdown-item"))
+  function applyTariffFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const tariff = params.get("tariff");
+    const select = document.getElementById("pricing-select");
+    if (select) select.value = tariff || "";
+  }
 
-    if (!nativeSelect || !dropdown || !toggle || !menu || !label) return
+  function setupFormReset() {
+    const form = document.querySelector(".contact");
+    if (!form) return;
+    form.addEventListener("submit", () => {
+      setTimeout(() => form.reset(), 200);
+    });
+  }
 
-    toggle.addEventListener("click", (e) => {
-      e.stopPropagation()
-      dropdown.classList.toggle("open")
-    })
-
-    items.forEach((item) => {
-      item.addEventListener("click", () => {
-        const value = item.getAttribute("data-value") ?? ""
-        const text = String(item.textContent ?? "").trim()
-        nativeSelect.value = value
-        nativeSelect.dispatchEvent(new Event("change", { bubbles: true }))
-        label.textContent = text || "Выберите тариф"
-        dropdown.classList.remove("open")
-      })
-    })
-
-
-    document.addEventListener("click", (e) => {
-      if (!dropdown.contains(e.target)) {
-        dropdown.classList.remove("open")
-      }
-    })
-
-    function applyTariffFromUrl() {
-      const params = new URLSearchParams(window.location.search)
-      const tariff = params.get("tariff")
-
-      if (!tariff) {
-        nativeSelect.value = ""
-        label.textContent = "Выберите тариф"
-        return
-      }
-
-      const optionExists = !!Array.from((nativeSelect).options).find(opt => opt.value === tariff)
-
-      if (optionExists) {
-        nativeSelect.value = tariff
-        nativeSelect.dispatchEvent(new Event("change", { bubbles: true }))
-
-        const matched = items.find(it => it.getAttribute("data-value") === tariff)
-        if (matched) {
-          label.textContent = (matched.textContent || "").trim()
-        } else {
-          label.textContent = "Выберите тариф"
-        }
-      } else {
-        nativeSelect.value = ""
-        label.textContent = "Выберите тариф"
-      }
-    }
-
-    applyTariffFromUrl()
-    window.addEventListener("popstate", applyTariffFromUrl)
-    window.addEventListener("urlchange", applyTariffFromUrl)
-  })
+  applyTariffFromUrl();
+  setupFormReset();
 </script>
 
-<style scoped>
-  section {
-    height: 100svh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: var(--space-l);
-    position: relative;
-  }
+<style>
+section {
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-l);
+}
 
-  .title {
-    text-align: center;
-    font-size: var(--font-size-4);
-    color: var(--clr-pink-500);
-    margin-bottom: var(--space-xl);
-  }
+.title {
+  text-align: center;
+  font-size: var(--font-size-4);
+  color: var(--clr-pink-500);
+  margin-bottom: var(--space-xl);
+}
 
+.contact {
+  inline-size: 50%;
+  background: var(--clr-white);
+  padding: var(--space-l);
+  border: 1px solid var(--clr-pink-400);
+  border-radius: var(--space-xs);
+  box-shadow: var(--box-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+  position: relative;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-m);
+}
+
+input,
+select {
+  width: 100%;
+  padding: var(--space-s);
+  font-size: var(--font-size-0);
+  border: none;
+  border-radius: var(--space-s);
+  background: var(--clr-neutral-800);
+  color: var(--clr-neutral-100);
+}
+
+select {
+  cursor: pointer;
+  border: 1px solid var(--clr-pink-400);
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23d63384' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right var(--space-s) center;
+  background-size: 2rem;
+}
+
+select:focus,
+input:focus {
+  outline: none;
+  border: 1px solid var(--clr-pink-500);
+  box-shadow: 0 0 0 2px var(--clr-pink-200);
+}
+
+option {
+  background: var(--clr-neutral-800);
+  color: var(--clr-neutral-100);
+  padding: var(--space-s);
+  border-radius: var(--space-s);
+  font-size: var(--font-size-0);
+}
+
+input::placeholder {
+  color: var(--clr-neutral-400);
+}
+
+.form-msg {
+  margin-top: var(--space-m);
+  padding: var(--space-s);
+  font-size: var(--font-size-1);
+  border-radius: var(--space-xs);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.form-msg.success {
+  color: var(--clr-green-500, hsl(140, 60%, 45%));
+  background: hsla(140, 60%, 90%, 0.3);
+  border: 1px solid var(--clr-green-400, hsl(140, 60%, 60%));
+  box-shadow: 0 0 0.5rem hsla(140, 50%, 60%, 0.2);
+}
+
+.form-msg.error {
+  color: var(--clr-red-500, hsl(0, 70%, 55%));
+  background: hsla(0, 70%, 90%, 0.3);
+  border: 1px solid var(--clr-red-400, hsl(0, 70%, 65%));
+  box-shadow: 0 0 0.5rem hsla(0, 70%, 60%, 0.2);
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Responsive */
+@media (max-width: 560px) {
   .contact {
-    inline-size: 50%;
-    background: var(--clr-white);
-    padding: var(--space-l);
-    border: 1px solid var(--clr-pink-400);
-    border-radius: var(--space-xs);
-    box-shadow: var(--box-shadow);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-s);
+    inline-size: 90%;
+    padding: 1rem;
   }
-
-  .form-actions {
-    display: flex;
-    justify-content: center;
-    margin-top: var(--space-m);
+  .title {
+    font-size: 1.5rem;
   }
-
-  input {
-    width: 100%;
-    padding: var(--space-s);
-    font-size: var(--font-size-0);
-    border: none;
-    border-radius: var(--space-s);
-    background: var(--clr-neutral-800);
-    color: var(--clr-neutral-100);
-    border: 1px solid var(--clr-pink-400);
-  }
-
-  input:focus {
-    outline: none;
-    border: 1px solid var(--clr-pink-500);
-    box-shadow: 0 0 0 2px var(--clr-pink-200);
-  }
-
-  #pricing-select {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-    inset: 0;
-  }
-
-  /* Dropdown */
-  .dropdown {
-    position: relative;
-    user-select: none;
-  }
-
-  .dropdown-toggle {
-    width: 100%;
-    padding: var(--space-s);
-    background: var(--clr-neutral-800);
-    border: 1px solid var(--clr-pink-400);
-    color: var(--clr-neutral-100);
-    border-radius: var(--space-s);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    font-size: var(--font-size-0);
-  }
-
-  .dropdown:not(.open) ul {
-    visibility: hidden;
-  }
-
-  .dropdown.open .select-arrow {
-    transform: translateY(-50%) rotate(180deg);
-  }
-
-  .dropdown-menu {
-    position: absolute;
-    top: calc(100% + var(--space-3xs));
-    background: var(--clr-neutral-800);
-    border: 1px solid var(--clr-pink-400);
-    border-radius: var(--space-s);
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    z-index: 10;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    inline-size: 100%;
-  }
-
-  .dropdown.open .dropdown-menu {
-    max-height: fit-content;
-  }
-
-  .dropdown-item {
-    padding: var(--space-s);
-    cursor: pointer;
-    text-decoration: none;
-  }
-
-  .dropdown-item:hover {
-    background: var(--clr-neutral-700);
-  }
-
-  option {
-    color: var(--clr-neutral-100);
-    background: var(--clr-neutral-800);
-  }
-
-  input::placeholder {
-    color: var(--clr-neutral-400);
-  }
-
-  .success-msg {
-    text-align: center;
-    font-size: var(--font-size-2);
-    color: var(--clr-green-500);
-  }
-
-  .visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    border: 0;
-  }
-
-  .toast-root {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    pointer-events: none;
-  }
-  .toast {
-    min-width: 240px;
-    max-width: 400px;
-    padding: 12px 16px;
-    border-radius: 10px;
-    color: white;
-    background: #222;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.14);
-    transform: translateY(-8px) scale(0.98);
-    opacity: 0;
-    transition: all 260ms cubic-bezier(.2,.9,.2,1);
-    pointer-events: auto;
-  }
-
-  .toast-success {
-    background: linear-gradient(90deg, var(--clr-pink-500), #c22870);
-  }
-
-  .toast-error {
-    background: linear-gradient(90deg, #7b3be8, #6a2bd6);
-  }
-
-  .toast.visible {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-
-  .visually-hidden {
-    position: absolute !important;
-    height: 1px; width: 1px;
-    overflow: hidden; clip: rect(1px,1px,1px,1px);
-    white-space: nowrap;
-  }
-
-  @media (max-width: 560px) {
-    .contact { padding: 1rem; }
-    .title { font-size: 1.5rem; }
-    .toast-root { left: 12px; right: 12px; top: 12px; }
-  }
+}
 </style>
