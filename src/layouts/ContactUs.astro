@@ -1,114 +1,82 @@
 ---
-import Button from "../components/Button.astro"
-import { pricingPlans } from "../data/pricingData"
+import { actions, isInputError } from "astro:actions";
+import { pricingPlans } from "../data/pricingData";
+import Button from "../components/Button.astro";
+import "../styles/global.css";
+import "../styles/variables.css";
+
+const result = Astro.getActionResult(actions.submitForm);
+const inputErrors = isInputError(result?.error) ? result.error.fields : {};
 ---
 
 <section id="contact" class="full-width">
   <h1 class="title">Оставить заявку</h1>
 
-  <main class="contact">
-    <form id="contactForm">
-      <div class="form-group">
-        <input
-          type="text"
-          id="name"
-          name="name"
-          placeholder="Имя Фамилия"
-          required
-        />
-      </div>
+  <form method="POST" action={actions.submitForm} class="contact" aria-live="polite">
+    <div class="form-group">
+      <label for="name" class="visually-hidden">Имя и фамилия</label>
+      <input transition:persist id="name" name="name" placeholder="Имя Фамилия" aria-describedby="error" required />
+      {inputErrors.name && <p id="error">{inputErrors.name.join(',')}</p>}
+    </div>
 
-      <div class="form-group">
-        <input
-          type="tel"
-          id="phone"
-          name="phone"
-          placeholder="Телефон"
-          required
-        />
-      </div>
+    <div class="form-group">
+      <label for="phone" class="visually-hidden">Телефон</label>
+      <input transition:persist id="phone" name="phone" type="tel" placeholder="Телефон" aria-describedby="error" required />
+      {inputErrors.phone && <p id="error">{inputErrors.phone.join(',')}</p>}
+    </div>
 
-      <div class="form-group">
-        <input
-          type="email"
-          id="email"
-          name="email"
-          placeholder="Почта"
-          required
-        />
-      </div>
+    <div class="form-group">
+      <label for="email" class="visually-hidden">Электронная почта</label>
+      <input transition:persist id="email" name="email" type="email" placeholder="Почта" aria-describedby="error" required />
+      {inputErrors.email && <p id="error">{inputErrors.email.join(',')}</p>}
+    </div>
 
-      <div class="form-group">
-        <select id="tariff" name="tariff" required>
-          <option value="" disabled selected>Выберите тариф</option>
-          {pricingPlans.map((plan) => (
-            <option value={`${plan.title} (${plan.price})`}>
-              {plan.title} — {plan.price}
-            </option>
-          ))}
-        </select>
-      </div>
+    <div class="form-group">
+      <label for="pricing-select" class="visually-hidden">Выбор тарифа</label>
+      <select id="pricing-select" name="tariff" aria-describedby="error" required>
+        <option value="">Выберите тариф</option>
+        {pricingPlans.map(plan => (
+          <option value={plan.id}>
+            {plan.title} — {plan.price}
+          </option>
+        ))}
+      </select>
+    </div>
 
-      <div class="form-actions">
-        <Button text="Отправить заявку" variant="primary" />
-      </div>
-    </form>
-  </main>
+    <div class="form-actions">
+      <Button type="submit" text="Отправить заявку" variant="primary" />
+    </div>
 
-  <div id="toast" class="toast"></div>
+    {result && !result.error && (
+      <p class="form-msg success">Заявка отправлена</p>
+    )}
+    {result && !result.error && (
+      <p class="form-msg error">Ошибка при отправке. Попробуйте снова</p>
+    )}
+  </form>
 </section>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const form = document.getElementById("contactForm")
+<script lang="ts">
+  function applyTariffFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const tariff = params.get("tariff");
+    const select = document.getElementById("pricing-select");
+    if (select) select.value = tariff || "";
+  }
 
-    function showToast(message = "", type = "success") {
-      const toast = document.createElement("div")
-      toast.className = `toast toast-${type}`
-      toast.innerText = message
+  function setupFormReset() {
+    const form = document.querySelector(".contact");
+    if (!form) return;
+    form.addEventListener("submit", () => {
+      setTimeout(() => form.reset(), 200);
+    });
+  }
 
-      document.body.appendChild(toast)
-
-      setTimeout(() => {
-        toast.classList.add("show")
-      }, 100)
-
-      setTimeout(() => {
-        toast.classList.remove("show")
-        setTimeout(() => toast.remove(), 300)
-      }, 3000)
-    }
-
-    if (!form) return
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault()
-
-      const formData = new FormData(form as any)
-
-      const actionUrl =
-        "https://docs.google.com/forms/d/e/1FAIpQLScUsRnLLQfr1Sl7wZDMgT3ZrOI3v-1TsXdmMvBQiRtK7QrNSA/formResponse"
-
-      try {
-        await fetch(actionUrl, {
-          method: "POST",
-          body: formData,
-          mode: "no-cors",
-        })
-
-        showToast("✅ Заявка отправлена!", "success")
-        if (form && 'reset' in form) {
-          (form as any).reset()
-        }
-      } catch (err) {
-        console.error("Ошибка отправки:", err)
-        showToast("❌ Ошибка при отправке. Попробуйте снова.", "error")
-      }
-    })
-  })
+  applyTariffFromUrl();
+  setupFormReset();
 </script>
 
-<style scoped>
+<style>
 section {
   height: 100svh;
   display: flex;
@@ -116,7 +84,6 @@ section {
   align-items: center;
   justify-content: center;
   padding: var(--space-l);
-  position: relative;
 }
 
 .title {
@@ -135,13 +102,8 @@ section {
   box-shadow: var(--box-shadow);
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
   gap: var(--space-s);
+  position: relative;
 }
 
 .form-actions {
@@ -159,31 +121,12 @@ select {
   border-radius: var(--space-s);
   background: var(--clr-neutral-800);
   color: var(--clr-neutral-100);
-  appearance: none;
-  z-index: 1;
 }
-
-input.invalid,
-select.invalid {
-  border: 1px solid var(--clr-red-500, #f44336);
-  box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.2);
-}
-
-.error-message {
-  color: var(--clr-red-500, #f44336);
-  font-size: 0.9rem;
-  margin-top: 0.25rem;
-}
-
 
 select {
   cursor: pointer;
   border: 1px solid var(--clr-pink-400);
-
   appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
   background-image: url("data:image/svg+xml;utf8,<svg fill='%23d63384' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>");
   background-repeat: no-repeat;
   background-position: right var(--space-s) center;
@@ -198,39 +141,59 @@ input:focus {
 }
 
 option {
-  color: var(--clr-neutral-100);
   background: var(--clr-neutral-800);
+  color: var(--clr-neutral-100);
+  padding: var(--space-s);
+  border-radius: var(--space-s);
+  font-size: var(--font-size-0);
 }
 
 input::placeholder {
   color: var(--clr-neutral-400);
 }
 
-.toast {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  padding: 1rem 1.5rem;
+.form-msg {
+  margin-top: var(--space-m);
+  padding: var(--space-s);
+  font-size: var(--font-size-1);
   border-radius: var(--space-xs);
-  font-size: var(--font-size-0);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  z-index: 9999;
+  text-align: center;
+  transition: all 0.3s ease;
 }
 
-.toast.show {
-  opacity: 1;
-  transform: translateY(0);
+.form-msg.success {
+  color: var(--clr-green-500, hsl(140, 60%, 45%));
+  background: hsla(140, 60%, 90%, 0.3);
+  border: 1px solid var(--clr-green-400, hsl(140, 60%, 60%));
+  box-shadow: 0 0 0.5rem hsla(140, 50%, 60%, 0.2);
 }
 
-.toast.success {
-  background: var(--clr-green-500, #4caf50);
-  color: white;
+.form-msg.error {
+  color: var(--clr-red-500, hsl(0, 70%, 55%));
+  background: hsla(0, 70%, 90%, 0.3);
+  border: 1px solid var(--clr-red-400, hsl(0, 70%, 65%));
+  box-shadow: 0 0 0.5rem hsla(0, 70%, 60%, 0.2);
 }
 
-.toast.error {
-  background: var(--clr-red-500, #f44336);
-  color: white;
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* Responsive */
+@media (max-width: 560px) {
+  .contact {
+    inline-size: 90%;
+    padding: 1rem;
+  }
+  .title {
+    font-size: 1.5rem;
+  }
 }
 </style>

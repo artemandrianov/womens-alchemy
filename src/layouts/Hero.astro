@@ -20,7 +20,7 @@ import Button from "../components/Button.astro";
       </div>
     </div>
     <div class="content-img">
-      <img src="../../public/hero-img.png" alt="hero" />
+      <img src="/hero-img.jpg" alt="hero" />
     </div>
   </div>
 </section>
@@ -53,11 +53,13 @@ import Button from "../components/Button.astro";
     --header-height: 100px;
     --footer-height: 100px;
     --block-size: calc(100svh - var(--header-height) - var(--footer-height));
+
     block-size: var(--block-size);
   }
 
   .content-img img {
     height: 100%;
+    border-radius: var(--border-radius);
     width: auto;
     object-fit: cover;
   }

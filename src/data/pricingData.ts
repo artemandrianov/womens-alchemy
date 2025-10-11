@@ -1,5 +1,6 @@
 export const pricingPlans = [
   {
+    id: "basic",
     title: "Базовый",
     features: [
       "Консультация на выбор на 1 из тем: Рода, Денег, Проявленности.",
@@ -12,9 +13,11 @@ export const pricingPlans = [
       "Практика на свободу голоса"
     ],
     price: "16.666 руб: 4 дня по 4 часа",
-    color: "var(--clr-pink-300)"
+    color: "var(--clr-pink-300)",
+    popular: true
   },
   {
+    id: "standard",
     title: "Стандарт",
     features: [
       "Консультация на 2 темы на выбор: Рода, Денег, Проявленности",
@@ -34,7 +37,8 @@ export const pricingPlans = [
     color: "var(--clr-pink-400)"
   },
   {
-    title: "Вип",
+    id: "vip",
+    title: "VIP",
     features: [
       "Консультация на тему Рода",
       "Работа с метафорическими картами Рода",
