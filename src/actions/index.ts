@@ -1,5 +1,5 @@
-import { defineAction } from "astro:actions";
-import { z } from "astro:schema";
+import { defineAction } from "astro:actions"
+import { z } from "astro:schema"
 
 export const server = {
   submitForm: defineAction({
@@ -12,7 +12,7 @@ export const server = {
     }),
 
     handler: async ({ name, phone, email, tariff }) => {
-      const now = new Date().toLocaleString("ru-RU");
+      const now = new Date().toLocaleString("ru-RU")
 
       const payload = {
         name,
@@ -20,22 +20,22 @@ export const server = {
         email,
         tariff: tariff ?? "",
         date: now,
-      };
+      }
 
       const GOOGLE_SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbywEJr20BdbqUrfJhIfgDoBqPhkoapl31lj79Whj-LoSAl5_cppzr6h_ODWisUpWVwo/exec";
+        "https://script.google.com/macros/s/AKfycbywEJr20BdbqUrfJhIfgDoBqPhkoapl31lj79Whj-LoSAl5_cppzr6h_ODWisUpWVwo/exec"
 
       const res = await fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
         body: JSON.stringify(payload),
         headers: { "Content-Type": "application/json" },
-      });
+      })
 
       if (!res.ok) {
-        throw new Error(`Ошибка при отправке формы: ${res.status}`);
+        throw new Error(`Ошибка при отправке формы: ${res.status}`)
       }
 
-      return { success: true };
+      return { success: true }
     },
   }),
-};
+}

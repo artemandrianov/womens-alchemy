@@ -7,7 +7,7 @@ import ScrollSnap from "../components/ScrollSnap.astro"
 <section id="reviews" class="reviews full-width">
   <h1 class="reviews-title">Познакомьтесь с историями успеха</h2>
 
-  <ScrollSnap client:load snapAlign="center">
+  <ScrollSnap snapAlign="center">
     {reviewsData.map((review) => (
       <ReviewCard name={review.name} text={review.text} avatar={review.avatar} />
     ))}

@@ -1,8 +1,10 @@
 interface Pricing {
+  id: string
   title: string
   features: string[]
   price: string
-  color: string
+  color: string,
+  popular: boolean
 }
 
 export const pricingPlans: Pricing[] = [
@@ -41,7 +43,8 @@ export const pricingPlans: Pricing[] = [
       "Сексуального обольщения"
     ],
     price: "32.000 руб: 8 дней по 4 часа",
-    color: "var(--clr-pink-400)"
+    color: "var(--clr-pink-400)",
+    popular: false
   },
   {
     id: "vip",
@@ -65,6 +68,7 @@ export const pricingPlans: Pricing[] = [
       "Практические занятия на тему: Деньги, Внутренняя уверенность в себе, Свобода голоса, Новых телесных ощущений, Сексуального обольщения"
     ],
     price: "48.000 руб: 8 дней по 6 часов",
-    color: "var(--clr-pink-500)"
+    color: "var(--clr-pink-500)",
+    popular: false
   }
 ]

@@ -1,6 +1,6 @@
 ---
-import Button from "./Button.astro";
-import { pricingPlans } from "../data/pricingData";
+import Button from "./Button.astro"
+import { pricingPlans } from "../data/pricingData"
 ---
 
 <div class="pricing">
@@ -46,66 +46,65 @@ import { pricingPlans } from "../data/pricingData";
 </div>
 
 <script lang="ts">
-  document.addEventListener("DOMContentLoaded", () => {
-    const collapsedMax = 350
+document.addEventListener("DOMContentLoaded", () => {
+  const collapsedMax = 350
 
-    document.querySelectorAll(".toggle-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const targetId = btn.getAttribute("data-target")
-        if (!targetId) return
+  document.querySelectorAll(".toggle-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.getAttribute("data-target")
+      if (!targetId) return
 
-        const wrapper = document.getElementById(targetId)
+      const wrapper = document.getElementById(targetId)
+      if (!wrapper) return
 
-        if (!wrapper) return
+      const isExpanded = wrapper.classList.contains("expanded")
 
-        const isExpanded = wrapper.classList.contains("expanded")
+      if (!isExpanded) {
+        wrapper.style.maxHeight = wrapper.scrollHeight + "px"
+        wrapper.classList.add("expanded")
+        btn.textContent = "Скрыть ↑"
+        btn.setAttribute("aria-expanded", "true")
 
-        if (!isExpanded) {
-          // EXPAND
-          wrapper.style.maxHeight = wrapper.scrollHeight + "px"
-          wrapper.classList.add("expanded")
-          btn.textContent = "Скрыть ↑"
-          btn.setAttribute("aria-expanded", "true")
-
-          const onTransitionEnd = (e) => {
-            if (e.propertyName === "max-height") {
-              wrapper.style.maxHeight = "none"
-              wrapper.removeEventListener("transitionend", onTransitionEnd)
-            }
+        const onTransitionEnd = (e) => {
+          if ((e).propertyName === "max-height") {
+            wrapper.style.maxHeight = "none"
+            wrapper.removeEventListener("transitionend", onTransitionEnd)
           }
-          wrapper.addEventListener("transitionend", onTransitionEnd)
-        } else {
-          // COLLAPSE
-          const current = wrapper.scrollHeight
-
-          wrapper.style.maxHeight = current + "px"
-          wrapper.offsetHeight
-          wrapper.style.maxHeight = collapsedMax + "px"
-          wrapper.classList.remove("expanded")
-
-          btn.textContent = "Посмотреть ещё ↓"
-          btn.setAttribute("aria-expanded", "false")
         }
-      })
-    })
-    
-    document.querySelectorAll(".buy-now").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault()
+        wrapper.addEventListener("transitionend", onTransitionEnd)
+      } else {
+        const current = wrapper.scrollHeight
+        wrapper.style.maxHeight = current + "px"
+        wrapper.offsetHeight
+        wrapper.style.maxHeight = collapsedMax + "px"
+        wrapper.classList.remove("expanded")
 
-        const url = new URL(window.location.href)
-        const newUrl = `${url.pathname}?tariff=${btn.getAttribute("href").match(/tariff=([^#]+)/)[1]}#contact`
-
-        history.pushState({}, "", newUrl)
-
-        const target = document.getElementById("contact")
-        if (target) target.scrollIntoView({ behavior: "smooth" })
-
-        window.dispatchEvent(new Event("urlchange"))
-      })
+        btn.textContent = "Посмотреть ещё ↓"
+        btn.setAttribute("aria-expanded", "false")
+      }
     })
   })
+
+  document.querySelectorAll(".buy-now").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault()
+
+      const href = btn.getAttribute("href") || ""
+      const newUrl = new URL(href, window.location.href)
+      newUrl.hash = "contact"
+
+      history.pushState({}, "", newUrl.toString())
+
+      const target = document.getElementById("contact")
+      if (target) target.scrollIntoView({ behavior: "smooth" })
+
+      const tariff = newUrl.searchParams.get("tariff")
+      window.dispatchEvent(new CustomEvent("urlchange", { detail: { tariff } }))
+    })
+  })
+})
 </script>
+
 
 <style scoped>
   .pricing {
