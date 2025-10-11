@@ -1,41 +1,5 @@
 ---
-interface Step {
-  number: string;
-  title: string;
-  subtitle: string;
-  description: string;
-}
-
-const steps: Step[] = [
-  {
-    number: "1",
-    title: "Стихия Земля:",
-    subtitle: "Развитие уверенности",
-    description:
-      "Вы научитесь ценить себя и свои достижения, обретёте внутреннюю опору и станете увереннее в любых ситуациях.",
-  },
-  {
-    number: "2",
-    title: "Стихия Огонь:",
-    subtitle: "Смелое заявление о себе миру",
-    description:
-      "Я помогу вам раскрыться, поддержу вас на пути самовыражения, помогу смело и ярко заявить о себе, чтобы ваше присутствие было заметно и значимо.",
-  },
-  {
-    number: "3",
-    title: "Стихия Вода:",
-    subtitle: "Гармония и целостность",
-    description:
-      "Вы соедините все грани своей личности в единый поток: уверенность, самовыражение, женская манкая энергия и новые открытия сольются в гармонию. Это даст ощущение целостности, внутреннего равновесия и силы для дальнейшего пути.",
-  },
-  {
-    number: "4",
-    title: "Стихия Воздух:",
-    subtitle: "Открытие новых граней",
-    description:
-      "Вы узнаете о себе больше, откроете скрытые таланты и способности, которые сделают вашу жизнь глубже и ярче. Вы удивитесь, насколько богаты ваши внутренние ресурсы!",
-  },
-];
+import { steps } from '../data/Steps'
 ---
 
 <section id="howitworks" class="full-width">
@@ -221,69 +185,194 @@ const steps: Step[] = [
     pointer-events: none;
     z-index: 1;
   }
+
+@media (max-width: 1024px) {
+  #howitworks {
+    --row-gap: 60px;
+    padding-block: var(--space-xl);
+    height: auto;
+  }
+
+  .timeline {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    align-items: center;
+    row-gap: var(--space-xl);
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 55ch;
+    margin: 0 auto;
+  }
+
+  .text h4 {
+    font-size: var(--font-size-3);
+  }
+
+  .text p {
+    max-width: 40ch;
+    line-height: 1.4;
+  }
+
+  .points-wrapper {
+    justify-content: center;
+  }
+
+  .points-wrapper .point-left,
+  .points-wrapper .point-right {
+    margin: 0;
+    width: 22px;
+    height: 22px;
+  }
+
+  .arc-svg {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  #howitworks {
+    padding-inline: var(--space-l);
+    padding-block: var(--space-l-xl);
+  }
+
+  .timeline {
+    row-gap: var(--space-l);
+  }
+
+  .text {
+    max-width: var(--text-width);
+  }
+
+  .text h4 {
+    font-size: var(--font-size-2);
+  }
+
+  .text p {
+    font-size: var(--font-size-1);
+    line-height: 1.5;
+  }
+}
+
+@media (max-width: 600px) {
+  .howitworks-header {
+    padding: var(--space-l) 0 var(--space-m);
+    text-align: center;
+  }
+
+  .howitworks-header::after {
+    top: auto;
+    bottom: 4.2rem;
+    left: 90%;
+    transform: translateX(-50%) scale(0.8);
+  }
+
+  .howitworks-header h2,
+  .howitworks-header h3 {
+    font-size: clamp(1.5rem, 2.5vw + 1rem, 2.1rem);
+    text-align: center;
+  }
+
+  #howitworks {
+    padding-inline: var(--space-m);
+    padding-bottom: var(--space-xl);
+  }
+
+  .timeline {
+    row-gap: var(--space-m);
+  }
+
+  .points-wrapper .point-left,
+  .points-wrapper .point-right {
+    width: 18px;
+    height: 18px;
+    transform: translateX(-50%) scale(0.8);
+  }
+
+  .text p {
+    font-size: var(--font-size-0);
+    line-height: 1.4;
+  }
+
+  .text h4 {
+    margin-bottom: var(--space-xs);
+    margin-top: var(--space-s);
+  }
+}
+
 </style>
 
 <script>
   function updateTimelineWithArc(arcRadius = 35) {
-    const timeline = document.querySelector(".timeline");
-    if (!timeline) return;
+    const timeline = document.querySelector(".timeline")
+    if (!timeline) return
 
-    const svg = timeline.querySelector(".arc-svg");
-    if (!svg) return;
+    const svg = timeline.querySelector(".arc-svg")
+    if (!svg) return
 
-    const pathTop = svg.querySelector(".line-top");
-    const pathBottom = svg.querySelector(".line-bottom");
-    const arc = svg.querySelector(".arc-path");
+    const pathTop = svg.querySelector(".line-top")
+    const pathBottom = svg.querySelector(".line-bottom")
+    const arc = svg.querySelector(".arc-path")
 
-    const p1 = timeline.querySelector('.step[data-step="1"] .point-left');
-    const p2 = timeline.querySelector('.step[data-step="2"] .point-right');
-    const p3 = timeline.querySelector('.step[data-step="3"] .point-left');
-    const p4 = timeline.querySelector('.step[data-step="4"] .point-right');
-    const tRect = timeline.getBoundingClientRect();
+    const p1 = timeline.querySelector('.step[data-step="1"] .point-left')
+    const p2 = timeline.querySelector('.step[data-step="2"] .point-right')
+    const p3 = timeline.querySelector('.step[data-step="3"] .point-left')
+    const p4 = timeline.querySelector('.step[data-step="4"] .point-right')
+    const tRect = timeline.getBoundingClientRect()
 
     const center = (el: Element) => {
-      const r = el.getBoundingClientRect();
+      const r = el.getBoundingClientRect()
       return {
         x: r.left - tRect.left + r.width / 2,
         y: r.top - tRect.top + r.height / 2,
-      };
-    };
+      }
+    }
 
-    if (!p1 || !p2 || !p3 || !p4) return;
+    if (!p1 || !p2 || !p3 || !p4) return
 
-    const c1 = center(p1);
-    const c2 = center(p2);
-    const c3 = center(p3);
-    const c4 = center(p4);
+    const c1 = center(p1)
+    const c2 = center(p2)
+    const c3 = center(p3)
+    const c4 = center(p4)
 
     if (pathTop) {
-      pathTop.setAttribute("d", `M ${c1.x} ${c1.y} L ${c2.x} ${c2.y}`);
+      pathTop.setAttribute("d", `M ${c1.x} ${c1.y} L ${c2.x} ${c2.y}`)
     }
 
     if (pathBottom) {
-      pathBottom.setAttribute("d", `M ${c3.x} ${c3.y} L ${c4.x} ${c4.y}`);
+      pathBottom.setAttribute("d", `M ${c3.x} ${c3.y} L ${c4.x} ${c4.y}`)
     }
 
     if (arc) {
       arc.setAttribute(
         "d",
         `M ${c2.x} ${c2.y} A ${arcRadius} ${arcRadius} 0 0 1 ${c4.x} ${c4.y}`,
-      );
+      )
     }
 
-    svg.setAttribute("viewBox", `0 0 ${tRect.width} ${tRect.height}`);
+    svg.setAttribute("viewBox", `0 0 ${tRect.width} ${tRect.height}`)
   }
 
-  const arcRadius = 60;
+  const arcRadius = 60
 
-  window.addEventListener("load", () => updateTimelineWithArc(arcRadius));
-  window.addEventListener("resize", () => updateTimelineWithArc(arcRadius));
+  window.addEventListener("load", () => updateTimelineWithArc(arcRadius))
+  window.addEventListener("resize", () => updateTimelineWithArc(arcRadius))
   if ("ResizeObserver" in window) {
-    const timelineEl = document.querySelector(".timeline");
+    const timelineEl = document.querySelector(".timeline")
     if (timelineEl) {
       new ResizeObserver(() => updateTimelineWithArc(arcRadius)).observe(
         timelineEl,
-      );
+      )
     }
   }
 </script>

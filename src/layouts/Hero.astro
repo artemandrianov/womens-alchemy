@@ -27,6 +27,10 @@ import Button from "../components/Button.astro";
 
 <style scoped>
   .hero {
+    --header-height: 100px;
+    --footer-height: 100px;
+    --block-size: calc(100svh - var(--header-height) - var(--footer-height));
+
     display: flex;
     flex-direction: column;
     height: 100svh;
@@ -50,10 +54,6 @@ import Button from "../components/Button.astro";
   }
 
   .content-img {
-    --header-height: 100px;
-    --footer-height: 100px;
-    --block-size: calc(100svh - var(--header-height) - var(--footer-height));
-
     block-size: var(--block-size);
   }
 
@@ -108,12 +108,35 @@ import Button from "../components/Button.astro";
       flex-direction: column;
       text-align: center;
       padding-block: var(--space-l-xl);
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    .content-text {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2xs-xs);
+    }
+
+    .cta-row {
+      justify-content: center;
+      margin-top: var(--space-3xl);
+    }
+
+    .heading::before {
+      display: none;
     }
     .content-img {
-      display: none;
+      position: relative;
     }
     .content-img img {
-      display: none;
+      position: absolute;
+      top: -22rem;
+      left: -14rem;
+      z-index: -1;
+      block-size: var(--block-size);
+      inline-size: var(--block-size);
     }
   }
 </style>

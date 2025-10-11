@@ -3,64 +3,209 @@ const { class: className } = Astro.props;
 ---
 
 <header class:list={["header", className]}>
-  <div class="content flex-group flow">
+  <div class="content header-row">
     <img src="/logo.png" alt="Женская алхимия" class="logo" />
-    <nav>
+
+    <nav class="nav-desktop">
       <ul>
-        <li>
-          <a href="#howitworks">О курсе</a>
-        </li>
-        <li>
-          <a href="#about">Обо мне</a>
-        </li>
-        <li>
-          <a href="#pricing">Тарифы</a>
-        </li>
-        <li>
-          <a href="#reviews">Отзывы</a>
-        </li>
-        <li>
-          <a href="#contact">Оставить заявку</a>
-        </li>
+        <li><a href="#howitworks">О курсе</a></li>
+        <li><a href="#about">Обо мне</a></li>
+        <li><a href="#pricing">Тарифы</a></li>
+        <li><a href="#reviews">Отзывы</a></li>
+        <li><a href="#contact">Оставить заявку</a></li>
       </ul>
     </nav>
+
+    <button id="hamburger" class="hamburger" aria-label="Открыть меню">
+      <svg
+        class="hamburger-icon"
+        viewBox="0 0 24 24"
+        width="32"
+        height="32"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <line x1="3" y1="12" x2="21" y2="12" />
+        <line x1="3" y1="18" x2="21" y2="18" />
+      </svg>
+    </button>
+
+  </div>
+
+  <div id="mobile-menu" class="mobile-menu">
+    <button class="close-btn" aria-label="Закрыть меню">×</button>
+    <ul>
+      <li><a href="#howitworks">О курсе</a></li>
+      <li><a href="#about">Обо мне</a></li>
+      <li><a href="#pricing">Тарифы</a></li>
+      <li><a href="#reviews">Отзывы</a></li>
+      <li><a href="#contact">Оставить заявку</a></li>
+    </ul>
   </div>
 </header>
 
+<script lang="ts">
+  document.addEventListener("DOMContentLoaded", () => {
+    const hamburger = document.getElementById("hamburger");
+    const menu = document.getElementById("mobile-menu");
+
+    if (!hamburger || !menu) return;
+
+    hamburger.addEventListener("click", () => {
+      hamburger.classList.toggle("open");
+      menu.classList.toggle("open");
+      document.body.classList.toggle("menu-open");
+    });
+
+    menu.querySelector(".close-btn").addEventListener("click", () => {
+      hamburger.classList.remove("open");
+      menu.classList.remove("open");
+      document.body.classList.remove("menu-open");
+    });
+
+    menu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        hamburger.classList.remove("open");
+        menu.classList.remove("open");
+        document.body.classList.remove("menu-open");
+      });
+    });
+  });
+</script>
+
 <style scoped>
-  header {
-    container-name: header;
-    padding: var(--space-m) 0;
-    z-index: 3;
+header {
+  padding: var(--space-m) 0;
+  z-index: 3;
+}
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-    div {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+.logo {
+  height: 65px;
+  width: auto;
+}
 
-    .logo {
-      height: 65px;
-      width: auto;
-    }
+/* Desktop */
+.nav-desktop ul {
+  display: flex;
+  gap: var(--space-xl);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nav-desktop a {
+  text-decoration: none;
+  color: var(--foreground-1);
+  font-weight: bold;
+}
+.nav-desktop a:hover {
+  color: var(--clr-accent-primary-hover);
+}
 
-    nav ul {
-      list-style: none;
-      display: flex;
-      margin: 0;
-      padding: 0;
-      gap: var(--space-xl);
+/* Hamburger */
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.hamburger-box {
+  width: 30px;
+  height: 20px;
+  position: relative;
+}
+.hamburger-inner,
+.hamburger-inner::before,
+.hamburger-inner::after {
+  position: absolute;
+  height: 3px;
+  width: 100%;
+  background: var(--foreground-1);
+  left: 0;
+  transition: transform 0.3s, opacity 0.3s;
+}
+.hamburger-inner {
+  top: 50%;
+  transform: translateY(-50%);
+}
+.hamburger-inner::before {
+  content: "";
+  top: -8px;
+}
+.hamburger-inner::after {
+  content: "";
+  top: 8px;
+}
+.hamburger.open .hamburger-inner {
+  transform: rotate(45deg);
+}
+.hamburger.open .hamburger-inner::before {
+  transform: rotate(90deg);
+  top: 0;
+  opacity: 0;
+}
+.hamburger.open .hamburger-inner::after {
+  transform: rotate(90deg);
+  top: 0;
+  opacity: 0;
+}
 
-      li a {
-        text-decoration: none;
-        color: var(--foreground-1);
-        font-weight: bold;
-        transition: color 0.3s;
+/* Mobile menu */
+.mobile-menu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 80vw;
+  height: 100svh;
+  background: var(--clr-snow);
+  padding: var(--space-l);
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.3);
+  transition: right 0.3s ease;
+  z-index: 1000;
+}
+.mobile-menu.open {
+  right: 0;
+}
+.mobile-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-l) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+}
+.mobile-menu a {
+  color: var(--foreground-1);
+  font-weight: bold;
+  text-decoration: none;
+}
+.close-btn {
+  background: none;
+  border: none;
+  font-size: var(--font-size-5);
+  align-self: flex-end;
+  cursor: pointer;
+}
 
-        &:hover {
-          color: var(--clr-accent-primary-hover);
-        }
-      }
-    }
+/* Responsive */
+@media (max-width: 700px) {
+  .content img {
+    height: 50px;
   }
+  .nav-desktop {
+    display: none;
+  }
+  .hamburger {
+    display: block;
+  }
+}
 </style>
