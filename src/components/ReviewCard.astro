@@ -20,19 +20,16 @@ const { name, text, avatar } = Astro.props;
 <style>
 .review-card {
   --avatar-size: 150px;
-
+  
+  display: flex;
+  gap: var(--space-m);
   background: var(--card-surface-1);
   color: var(--foreground-1);
   border-radius: var(--space-s);
   padding: var(--space-xl);
-  display: flex;
-  gap: var(--space-m);
   box-shadow: var(--box-shadow);
-  flex: 0 0 50%;
-  min-width: 350px;
-  max-width: 565px;
-  block-size: 350px;
 }
+
 
 .review-avatar {
   flex: 0 0 auto;
@@ -55,7 +52,6 @@ const { name, text, avatar } = Astro.props;
 .placeholder {
   width: 100%;
   height: 100%;
-  border-radius: 50%;
   background: var(--clr-neutral-700);
 }
 

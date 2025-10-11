@@ -1,4 +1,11 @@
-export const pricingPlans = [
+interface Pricing {
+  title: string
+  features: string[]
+  price: string
+  color: string
+}
+
+export const pricingPlans: Pricing[] = [
   {
     id: "basic",
     title: "Базовый",
