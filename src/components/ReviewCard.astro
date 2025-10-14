@@ -1,16 +1,17 @@
 ---
-interface Props {
-  name: string;
-  text: string;
-  avatar?: string;
+export interface Props {
+  name: string
+  text: string
+  avatar?: string
 }
-const { name, text, avatar } = Astro.props;
+const { name, text, avatar } = Astro.props
 ---
 
 <article class="review-card">
   <div class="review-avatar">
-    {avatar ? <img src={avatar} alt={name} /> : <div class="placeholder" />}
+    {avatar ? <img src={avatar} alt={name} loading="lazy" /> : <div class="placeholder" />}
   </div>
+
   <div class="review-content">
     <h4 class="review-name">{name}</h4>
     <p class="review-text">{text}</p>
@@ -18,69 +19,80 @@ const { name, text, avatar } = Astro.props;
 </article>
 
 <style>
-.review-card {
-  --avatar-size: 150px;
-  
-  display: flex;
-  gap: var(--space-m);
-  background: var(--card-surface-1);
-  color: var(--foreground-1);
-  border-radius: var(--space-s);
-  padding: var(--space-xl);
-  box-shadow: var(--box-shadow);
-}
+  .review-card {
+    --avatar-size: 150px;
 
+    display: flex;
+    gap: var(--space-m);
+    background: var(--card-surface-1);
+    color: var(--foreground-1);
+    border-radius: var(--space-s);
+    padding: var(--space-xl);
+    box-shadow: var(--box-shadow);
+    height: 100%;
+    overflow: hidden;
+  }
 
-.review-avatar {
-  flex: 0 0 auto;
-  width: var(--avatar-size);
-  height: var(--avatar-size);
-  border-radius: 50%;
-  overflow: hidden;
-  background: var(--clr-neutral-800);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+  .review-avatar {
+    flex: 0 0 auto;
+    width: var(--avatar-size);
+    height: var(--avatar-size);
+    border-radius: 50%;
+    overflow: hidden;
+    background: var(--clr-neutral-800);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-.review-avatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+  .review-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-.placeholder {
-  width: 100%;
-  height: 100%;
-  background: var(--clr-neutral-700);
-}
+  .placeholder {
+    width: 100%;
+    height: 100%;
+    background: var(--clr-neutral-700);
+  }
 
-.review-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: var(--space-2xs);
-}
+  .review-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-2xs);
+    min-width: 0;
+  }
 
-.review-name {
-  font-size: var(--font-size-1);
-  font-weight: 600;
-  margin: 0;
-}
+  .review-name {
+    font-size: var(--font-size-1);
+    font-weight: 600;
+    margin: 0;
+  }
 
-.review-text {
-  font-size: var(--font-size-0);
-  margin: 0;
-  line-height: 1.5;
-  color: var(--card-foreground-2);
-}
+  .review-text {
+    font-size: var(--font-size-0);
+    margin: 0;
+    line-height: 1.5;
+    color: var(--card-foreground-2);
+    overflow-wrap: break-word;
+  }
 
-.grid-flow {
-  justify-items: stretch;
-}
-
-p {
-  max-inline-size: none;
-}
-
+  /* ===  Mobile  === */
+  @media (max-width: 768px) {
+    .review-card {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: var(--space-l);
+      --avatar-size: 90px;
+    }
+    .review-content {
+      width: 100%;
+    }
+    .review-text {
+      font-size: var(--font-size--1);
+    }
+  }
 </style>

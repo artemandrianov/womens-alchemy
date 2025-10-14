@@ -5,30 +5,38 @@ import ScrollSnap from "../components/ScrollSnap.astro"
 ---
 
 <section id="reviews" class="reviews full-width">
-  <h1 class="reviews-title">Познакомьтесь с историями успеха</h2>
+  <h1 class="reviews-title">Познакомьтесь с историями успеха</h1>
 
-  <ScrollSnap snapAlign="center">
-    {reviewsData.map((review) => (
-      <ReviewCard name={review.name} text={review.text} avatar={review.avatar} />
-    ))}
+  <ScrollSnap snapAlign="center" gap="var(--space-m)">
+    {reviewsData.map((r) => <ReviewCard {...r} />)}
   </ScrollSnap>
 </section>
 
 <style>
-.reviews {
-  margin-top: var(--space-l);
-  padding-block: var(--space-2xl);
-  padding-inline: var(--space-m);
-  background: var(--clr-pink-400);
-  height: 100svh;
-}
+  .reviews {
+    margin-top: var(--space-l);
+    padding-block: var(--space-2xl);
+    padding-inline: var(--space-m);
+    background: var(--clr-pink-400);
+    min-height: 100svh;
+  }
 
-.reviews-title {
-  font-size: var(--font-size-4);
-  font-weight: 600;
-  margin-bottom: var(--space-xl);
-  text-align: center;
-  color: var(--clr-neutral-900);
-}
+  .reviews-title {
+    font-size: var(--font-size-4);
+    font-weight: 600;
+    margin-bottom: var(--space-xl);
+    text-align: center;
+    color: var(--clr-neutral-900);
+  }
 
+  @media (max-width: 768px) {
+    .reviews {
+      padding-block: var(--space-xl);
+      padding-inline: var(--space-2xs);
+    }
+    .reviews-title {
+      font-size: var(--font-size-3);
+      margin-bottom: var(--space-l);
+    }
+  }
 </style>

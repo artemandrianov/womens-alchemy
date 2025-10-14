@@ -264,6 +264,21 @@ import { steps } from '../data/Steps'
   }
 }
 
+@media (max-width: 700px) {
+  .text h4,
+  .text p {
+    width: auto;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+
+  .text h4 {
+    font-size: var(--font-size-1);
+  }
+}
+
 @media (max-width: 600px) {
   .howitworks-header {
     padding: var(--space-l) 0 var(--space-m);
@@ -307,6 +322,14 @@ import { steps } from '../data/Steps'
   .text h4 {
     margin-bottom: var(--space-xs);
     margin-top: var(--space-s);
+    font-size: var(--font-size-1);
+  }
+  .text h4,
+  .text p {
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
   }
 }
 

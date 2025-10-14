@@ -195,7 +195,11 @@ const {
 
 @media (max-width: 768px) {
   .scroll-arrow {
-    display: none !important;
+    display: none;
+  }
+  .scroll-snap-container {
+    grid-auto-columns: 75vw;
+    padding-inline: var(--space-xs);
   }
 }
 </style>

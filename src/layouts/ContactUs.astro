@@ -48,7 +48,7 @@ const inputErrors = isInputError(result?.error) ? result.error.fields : {}
     {result && !result.error && (
       <p class="form-msg success">Заявка отправлена</p>
     )}
-    {result && !result.error && (
+    {result && result.error && (
       <p class="form-msg error">Ошибка при отправке. Попробуйте снова</p>
     )}
   </form>
