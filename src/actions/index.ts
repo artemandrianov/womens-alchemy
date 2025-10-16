@@ -23,7 +23,7 @@ export const server = {
       }
 
       const GOOGLE_SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbxq2F79yGFOmJcIteTbVtWiD-Ryo4sFmpgCuSpukLECaWTDotTG8cjgoubVxyDc298I/exec"
+        "https://script.google.com/macros/s/AKfycbyvWaGG7fU9dx3oNgIsa6LD45BnIHlM8U-pnbqkMqVQMCGAMKPxwsqg-SqS9F_Av6Yu/exec"
 
       const res = await fetch(GOOGLE_SCRIPT_URL, {
         method: "POST",
