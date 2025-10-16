@@ -81,6 +81,7 @@ const { class: className } = Astro.props;
 header {
   padding: var(--space-m) 0;
   z-index: 3;
+  padding-inline: var(--space-3xl);
 }
 .header-row {
   display: flex;
@@ -198,6 +199,9 @@ header {
 
 /* Responsive */
 @media (max-width: 700px) {
+  .header {
+    padding-inline: var(--space-s);
+  }
   .content img {
     height: 50px;
   }

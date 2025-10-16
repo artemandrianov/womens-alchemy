@@ -22,13 +22,16 @@ export const server = {
         date: now,
       }
 
+      console.log("Payload to send:", payload)
+
       const GOOGLE_SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbyvWaGG7fU9dx3oNgIsa6LD45BnIHlM8U-pnbqkMqVQMCGAMKPxwsqg-SqS9F_Av6Yu/exec"
+        "https://script.google.com/macros/s/AKfycbyVogQQxTwGuFqDp-b5y_lESjczS9ySyjs2LGt-i_eZc4PhH8hHN-LeWvjVUSPVqez3-A/exec"
 
       const res = await fetch(GOOGLE_SCRIPT_URL, {
-        method: "POST",
+        redirect: 'follow',
+        method: 'POST',
         body: JSON.stringify(payload),
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
       })
 
       if (!res.ok) {
