@@ -5,7 +5,7 @@ export const server = {
   submitForm: defineAction({
     accept: "form",
     input: z.object({
-      name: z.string().min(2, "Введите имя"),
+      name: z.string().min(2, "Введите Имя Фамилию"),
       phone: z.string().min(5, "Введите телефон"),
       email: z.string().email("Некорректный email"),
       tariff: z.string().optional(),
@@ -38,7 +38,10 @@ export const server = {
         throw new Error(`Ошибка при отправке формы: ${res.status}`)
       }
 
-      return { success: true }
-    },
+      const headers = new Headers();
+        headers.append("Set-Cookie", "form_submitted=true; Path=/; HttpOnly")
+
+        return new Response(JSON.stringify({ success: true }), { headers })
+      }
   }),
 }

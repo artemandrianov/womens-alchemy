@@ -8,17 +8,45 @@ import Pricing from "../layouts/Pricing.astro";
 import ContactUs from "../layouts/ContactUs.astro"
 import Reviews from "../layouts/Reviews.astro";
 import Footer from "../components/Footer.astro"
+import { SEO } from "astro-seo"
+
+const metaDescription = "Курс Жeнская алхимия — 4 стихии для трансформации. Путь к раскрытию потенциала, уверенности и самовыражению."
+const title = "Женская алхимия: 4 стихии для трансформации"
 ---
 
 <!doctype html>
 <html lang="ru">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Женская алхимия: 4 стихии для трансформации</title>
-    <meta
-      name="description"
-      content="Курс Жeнская алхимия — 4 стихии для трансформации. Путь к раскрытию потенциала, уверенности и самовыражению."
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <SEO
+      title={title}
+      description={metaDescription}
+      canonical={`https://xn----7sbbreqalmle2c3c5hh.xn--p1ai${Astro.url.pathname}`}
+      openGraph={{
+        basic: {
+          title,
+          type: "website",
+          image: "/logo.png",
+          url: `https://xn----7sbbreqalmle2c3c5hh.xn--p1ai${Astro.url.pathname}`,
+        },
+        optional: {
+          description: metaDescription,
+          locale: "ru_RU",
+          siteName: "Женская алхимия",
+        },
+      }}
+      twitter={{
+        card: "summary_large_image",
+        title,
+        description: metaDescription,
+        image: "/logo.png",
+      }}
+      extend={{
+        link: [{ rel: "icon", type: "image/png", href: "/logo.png" }],
+        meta: [{ name: "robots", content: "index, follow" }],
+      }}
     />
   </head>
   <body class="primary-layout">
