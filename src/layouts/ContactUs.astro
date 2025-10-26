@@ -87,7 +87,7 @@ const inputErrors = isInputError(result?.error) ? result.error.fields : {}
   </form>
 </section>
 
-<script lang="ts">
+<script is:inline>
   (function () {
     function applyTariffFromUrl(tariffFromEvent) {
       const select = document.getElementById("pricing-select");

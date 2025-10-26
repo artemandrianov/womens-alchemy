@@ -3,6 +3,8 @@ import path from 'node:path'
 
 import { defineConfig, passthroughImageService } from 'astro/config';
 
+import netlify from '@astrojs/netlify';
+
 // https://astro.build/config
 export default defineConfig({
   output: 'server',
@@ -10,6 +12,7 @@ export default defineConfig({
   image: {
     service: passthroughImageService(),
   },
+
   vite: {
     resolve: {
       alias: {
@@ -29,4 +32,6 @@ export default defineConfig({
       },
     ],
   },
+
+  adapter: netlify(),
 });

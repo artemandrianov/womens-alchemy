@@ -48,7 +48,7 @@ const { class: className } = Astro.props;
   </div>
 </header>
 
-<script lang="ts">
+<script is:inline>
   document.addEventListener("DOMContentLoaded", () => {
     const hamburger = document.getElementById("hamburger");
     const menu = document.getElementById("mobile-menu");
