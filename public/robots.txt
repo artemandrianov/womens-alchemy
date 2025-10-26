@@ -1,0 +1,14 @@
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://xn----7sbbreqalmle2c3c5hh.xn--p1aic:\Users\ArtemAndr\Desktop\repos\my-project\shopping-assistance-website\public\sitemap.xml/sitemap.xml
+
+# Disallow admin or private areas if you have any
+Disallow: /admin/
+Disallow: /private/
+Disallow: /api/
+
+# Crawl-delay for all bots
+Crawl-delay: 10 

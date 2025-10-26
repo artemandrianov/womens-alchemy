@@ -2,7 +2,7 @@
 import PricingCard from "../components/PricingCard.astro";
 ---
 
-<section id="pricing" class="full-width">
+<section id="pricing">
   <h2 class="pricing-title">Тарифы</h2>
   <div class="pricing-content">
     <PricingCard />
@@ -11,7 +11,7 @@ import PricingCard from "../components/PricingCard.astro";
 
 <style scoped>
   #pricing {
-    --row-gap: 50px;
+    --row-gap: var(--space-m);
     --color: var(--clr-pink-100);
     --border: 2px solid var(--border-color);
     --margin-inline: 0;
@@ -20,6 +20,8 @@ import PricingCard from "../components/PricingCard.astro";
     --padding-block: 5vh;
 
     padding-block: var(--padding-block);
+    display: flex;
+    flex-direction: column;
     gap: var(--row-gap);
   }
 

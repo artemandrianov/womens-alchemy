@@ -1,10 +1,20 @@
 ---
-import Header from "../components/Header.astro";
-import Button from "../components/Button.astro";
+import Header from "../components/Header.astro"
+import Button from "../components/Button.astro"
+
+const userAgent = Astro.request.headers.get("user-agent") || ""
+const isMobile = /mobile|android|iphone|ipad|phone/i.test(userAgent)
 ---
 
-<section class="hero">
+<section class="hero full-width">
   <Header />
+
+  <div class="hero-slider" data-hero-slider>
+    <div class="slide"><img src="/hero-img.jpg" alt="Image 1" /></div>
+    <div class="slide"><img src="/hero-img-2.jpg" alt="Image 2" /></div>
+    <div class="slide"><img src="/hero-img-3.jpg" alt="Image 3" /></div>
+  </div>
+
   <div class="hero-content primary-layout">
     <div class="content-text">
       <div class="heading">
@@ -14,24 +24,35 @@ import Button from "../components/Button.astro";
         4 стихии раскроют Ваши новые грани и помогут Вам заявить о себе этому
         миру
       </p>
+
       <div class="cta-row">
         <Button text="Выбрать тариф" variant="primary" href="#pricing" />
-        <Button text="Оставить заявку" href="#contact" />
+        { !isMobile && <Button text="Оставить заявку" href="#contact" /> }
       </div>
     </div>
+
     <div class="content-img">
       <img src="/hero-img.jpg" alt="hero" />
     </div>
+  </div>
+
+  <div class="slider-dots">
+    <span class="dot active" data-slide="0"></span>
+    <span class="dot" data-slide="1"></span>
+    <span class="dot" data-slide="2"></span>
   </div>
 </section>
 
 <style scoped>
   .hero {
+    --header-height: 100px;
+    --footer-height: 100px;
+    --block-size: calc(100svh - var(--header-height) - var(--footer-height));
+
     display: flex;
     flex-direction: column;
     height: 100svh;
   }
-
   .hero-content {
     width: 100%;
     display: flex;
@@ -39,43 +60,27 @@ import Button from "../components/Button.astro";
     justify-content: space-between;
     align-items: center;
     padding-block: var(--space-xl-2xl);
+    padding-inline: var(--space-3xl);
     color: var(--clr-neutral-100);
     text-align: start;
     overflow: hidden;
     gap: var(--space-xl);
   }
-
-  .content-text {
-    flex: 1;
-  }
-
-  .content-img {
-    --header-height: 100px;
-    --footer-height: 100px;
-    --block-size: calc(100svh - var(--header-height) - var(--footer-height));
-
-    block-size: var(--block-size);
-  }
-
+  .content-text { flex: 1; }
+  .content-img { block-size: var(--block-size); }
   .content-img img {
     height: 100%;
     border-radius: var(--border-radius);
     width: auto;
     object-fit: cover;
   }
-
-  .heading {
-    position: relative;
-    display: inline-block;
-  }
-
+  .heading { position: relative; display: inline-block; }
   .heading h1 {
     font-size: var(--font-size-5);
     margin-bottom: var(--space-s);
     line-height: 100%;
     font-weight: 600;
   }
-
   .heading::before {
     content: "";
     position: absolute;
@@ -90,13 +95,11 @@ import Button from "../components/Button.astro";
     z-index: -1;
     pointer-events: none;
   }
-
   .hero-content p {
     line-height: 100%;
     font-weight: 400;
     margin-bottom: var(--space-l);
   }
-
   .hero-content .cta-row {
     display: flex;
     gap: var(--space-m);
@@ -104,16 +107,120 @@ import Button from "../components/Button.astro";
   }
 
   @media (max-width: 768px) {
-    .hero-content {
-      flex-direction: column;
-      text-align: center;
-      padding-block: var(--space-l-xl);
+    .hero-slider {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
     }
+    .hero-slider {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .hero-slider::-webkit-scrollbar { display: none; }
+    .slide {
+      flex: 0 0 100%;
+      scroll-snap-align: start;
+    }
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-content {
+      margin-top: auto;
+      padding-bottom: 0;
+      padding-inline: 0;
+    }
+    .content-text {
+      position: relative;
+      z-index: 2;
+      padding-inline: var(--space-s);
+      background: linear-gradient(
+        to top,
+        rgba(204, 120, 149, 0.6) 0%,
+        rgba(255, 255, 255, 0.3) 100%
+      );
+    }
+
+    .content-text > *:not(.cta-row) {font-weight: 700;}
+
+    .hero-content p {
+      line-height: 100%;
+      text-align: start;
+      font-size: var(--font-size--1);
+    }
+    .cta-row {
+      justify-content: center;
+      margin-bottom: var(--space-xl-2xl);
+      -webkit-text-fill-color: initial;
+            text-fill-color: initial;
+    }
+    .heading {
+      position: relative;
+      display: flex;
+    }
+    .heading h1 {
+      font-size: var(--font-size-4);
+      margin-bottom: var(--space-s);
+      line-height: 100%;
+      text-align: start;
+    }
+    .heading::before,
     .content-img {
       display: none;
     }
-    .content-img img {
+    .desktop-only {
+      container-name: desktop-only;
+      display: none;
+    }
+
+    .slider-dots {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      translate: -50% 0;
+      display: flex;
+      gap: 0.5rem;
+      z-index: 2;
+    }
+    .dot {
+      width: 100px;
+      height: 5px;
+      background: #d9d9d9;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .dot.active { background: var(--clr-snow); }
+  }
+
+  @media (min-width: 769px) {
+    .hero-slider,
+    .slider-dots {
       display: none;
     }
   }
 </style>
+
+<script lang="ts">
+  /* ----------  переключение слайдов  ---------- */
+  const slider = document.querySelector("[data-hero-slider]");
+  const dots = document.querySelectorAll(".dot");
+
+  dots.forEach((d) =>
+    d.addEventListener("click", () => {
+      const idx = Number(d.dataset.slide);
+      slider.scrollTo({ left: slider.offsetWidth * idx, behavior: "smooth" });
+      dots.forEach((el) => el.classList.toggle("active", el === d));
+    })
+  );
+
+  /* синхронизируем точки при свайпе */
+  slider.addEventListener("scroll", () => {
+    const idx = Math.round(slider.scrollLeft / slider.offsetWidth);
+    dots.forEach((el, i) => el.classList.toggle("active", i === idx));
+  });
+</script>

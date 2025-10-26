@@ -3,221 +3,267 @@ import { actions, isInputError } from "astro:actions"
 import { pricingPlans } from "../data/pricingData"
 import Button from "../components/Button.astro"
 
-const result = Astro.getActionResult(actions.submitForm);
+const result = Astro.getActionResult(actions.submitForm)
 const inputErrors = isInputError(result?.error) ? result.error.fields : {}
 ---
 
 <section id="contact" class="full-width">
   <h1 class="title">Оставить заявку</h1>
 
-  <form method="POST" action={actions.submitForm} id="contact_us" class="contact" aria-live="polite">
+  <form
+    method="POST"
+    action={actions.submitForm}
+    id="contact_us"
+    class="contact"
+    aria-live="polite"
+  >
     <div class="form-group">
       <label for="name" class="visually-hidden">Имя и фамилия</label>
-      <input transition:persist id="name" name="name" placeholder="Имя Фамилия" aria-describedby="error" required />
-      {inputErrors.name && <p id="error">{inputErrors.name.join(',')}</p>}
+      <input
+        transition:persist
+        id="name"
+        name="name"
+        placeholder="Имя Фамилия"
+        aria-describedby="error"
+        required
+      />
+      {inputErrors.name && <p id="error">{inputErrors.name.join(",")}</p>}
     </div>
 
     <div class="form-group">
       <label for="phone" class="visually-hidden">Телефон</label>
-      <input transition:persist id="phone" name="phone" type="tel" placeholder="Телефон" aria-describedby="error" required />
-      {inputErrors.phone && <p id="error">{inputErrors.phone.join(',')}</p>}
+      <input
+        transition:persist
+        id="phone"
+        name="phone"
+        type="tel"
+        placeholder="Телефон"
+        aria-describedby="error"
+        required
+      />
+      {inputErrors.phone && <p id="error">{inputErrors.phone.join(",")}</p>}
     </div>
 
     <div class="form-group">
       <label for="email" class="visually-hidden">Электронная почта</label>
-      <input transition:persist id="email" name="email" type="email" placeholder="Почта" aria-describedby="error" required />
-      {inputErrors.email && <p id="error">{inputErrors.email.join(',')}</p>}
+      <input
+        transition:persist
+        id="email"
+        name="email"
+        type="email"
+        placeholder="Почта"
+        aria-describedby="error"
+        required
+      />
+      {inputErrors.email && <p id="error">{inputErrors.email.join(",")}</p>}
     </div>
 
     <div class="form-group">
       <label for="pricing-select" class="visually-hidden">Выбор тарифа</label>
-      <select id="pricing-select" name="tariff" aria-describedby="error" required>
+      <select
+        id="pricing-select"
+        name="tariff"
+        aria-describedby="error"
+        required
+      >
         <option value="">Выберите тариф</option>
-        {pricingPlans.map(plan => (
-          <option value={plan.id}>
-            {plan.title} — {plan.price}
-          </option>
-        ))}
+        {
+          pricingPlans.map((plan) => (
+            <option value={plan.id}>
+              {plan.title} — {plan.price}
+            </option>
+          ))
+        }
       </select>
     </div>
 
     <div class="form-actions">
-      <Button type="submit" text="Отправить заявку" variant="primary" />
+      <Button
+        type="submit"
+        text="Отправить заявку"
+        variant="primary"
+      />
     </div>
-
-    {result && !result.error && (
-      <p class="form-msg success">Заявка отправлена</p>
-    )}
-    {result && !result.error && (
-      <p class="form-msg error">Ошибка при отправке. Попробуйте снова</p>
-    )}
   </form>
 </section>
 
 <script lang="ts">
   (function () {
     function applyTariffFromUrl(tariffFromEvent) {
-      const select = document.getElementById("pricing-select")
-      if (!select) return
+      const select = document.getElementById("pricing-select");
+      if (!select) return;
 
       const tariff =
         tariffFromEvent ??
-        new URLSearchParams(window.location.search).get("tariff") ?? ""
+        new URLSearchParams(window.location.search).get("tariff") ??
+        "";
 
-      const optionExists = Array.from(select.options).some(o => o.value === tariff)
+      const optionExists = Array.from(select.options).some(
+        (o) => o.value === tariff,
+      );
       if (optionExists) {
-        select.value = tariff
+        select.value = tariff;
       } else {
-        select.value = ""
+        select.value = "";
       }
     }
 
     function setupFormReset() {
-      const form = document.querySelector(".contact")
-      if (!form) return
+      const form = document.querySelector(".contact");
+      if (!form) return;
       form.addEventListener("submit", () => {
-        setTimeout(() => form.reset(), 200)
-      })
+        setTimeout(() => {
+          form.reset();
+
+          const url = new URL(window.location.href);
+          url.search = "";
+          window.history.replaceState({}, "", url);
+        }, 200);
+      });
     }
 
     function init() {
-      applyTariffFromUrl()
-      setupFormReset()
+      applyTariffFromUrl();
+      setupFormReset();
 
       window.addEventListener("urlchange", (e) => {
-        const ce = e
-        applyTariffFromUrl(ce.detail?.tariff)
-      })
+        const ce = e;
+        applyTariffFromUrl(ce.detail?.tariff);
+      });
 
-      window.addEventListener("popstate", () => applyTariffFromUrl())
+      window.addEventListener("popstate", () => applyTariffFromUrl());
     }
 
     if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", init)
+      document.addEventListener("DOMContentLoaded", init);
     } else {
-      init()
+      init();
     }
-  })()
+  })();
+
+  window.addEventListener("astro:after-swap", () => {
+    window.history.replaceState({}, "", window.location.pathname);
+  });
 </script>
 
 <style>
-section {
-  height: 100svh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-l);
-}
-
-.title {
-  text-align: center;
-  font-size: var(--font-size-4);
-  color: var(--clr-pink-500);
-  margin-bottom: var(--space-xl);
-}
-
-.contact {
-  inline-size: 50%;
-  background: var(--clr-white);
-  padding: var(--space-l);
-  border: 1px solid var(--clr-pink-400);
-  border-radius: var(--space-xs);
-  box-shadow: var(--box-shadow);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-s);
-  position: relative;
-}
-
-.form-actions {
-  display: flex;
-  justify-content: center;
-  margin-top: var(--space-m);
-}
-
-input,
-select {
-  width: 100%;
-  padding: var(--space-s);
-  font-size: var(--font-size-0);
-  border: none;
-  border-radius: var(--space-s);
-  background: var(--clr-neutral-800);
-  color: var(--clr-neutral-100);
-}
-
-select {
-  cursor: pointer;
-  border: 1px solid var(--clr-pink-400);
-  appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg fill='%23d63384' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right var(--space-s) center;
-  background-size: 2rem;
-}
-
-select:focus,
-input:focus {
-  outline: none;
-  border: 1px solid var(--clr-pink-500);
-  box-shadow: 0 0 0 2px var(--clr-pink-200);
-}
-
-option {
-  background: var(--clr-neutral-800);
-  color: var(--clr-neutral-100);
-  padding: var(--space-s);
-  border-radius: var(--space-s);
-  font-size: var(--font-size-0);
-}
-
-input::placeholder {
-  color: var(--clr-neutral-400);
-}
-
-.form-msg {
-  margin-top: var(--space-m);
-  padding: var(--space-s);
-  font-size: var(--font-size-1);
-  border-radius: var(--space-xs);
-  text-align: center;
-  transition: all 0.3s ease;
-}
-
-.form-msg.success {
-  color: var(--clr-green-500, hsl(140, 60%, 45%));
-  background: hsla(140, 60%, 90%, 0.3);
-  border: 1px solid var(--clr-green-400, hsl(140, 60%, 60%));
-  box-shadow: 0 0 0.5rem hsla(140, 50%, 60%, 0.2);
-}
-
-.form-msg.error {
-  color: var(--clr-red-500, hsl(0, 70%, 55%));
-  background: hsla(0, 70%, 90%, 0.3);
-  border: 1px solid var(--clr-red-400, hsl(0, 70%, 65%));
-  box-shadow: 0 0 0.5rem hsla(0, 70%, 60%, 0.2);
-}
-
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
-
-/* Responsive */
-@media (max-width: 560px) {
-  .contact {
-    inline-size: 90%;
-    padding: 1rem;
+  section {
+    height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-l);
   }
+
   .title {
-    font-size: 1.5rem;
+    text-align: center;
+    font-size: var(--font-size-4);
+    color: var(--clr-pink-500);
+    margin-bottom: var(--space-xl);
   }
-}
+
+  .contact {
+    inline-size: 50%;
+    background: var(--clr-white);
+    padding: var(--space-l);
+    border: 1px solid var(--clr-pink-400);
+    border-radius: var(--space-xs);
+    box-shadow: var(--box-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    position: relative;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-m);
+  }
+
+  input,
+  select {
+    width: 100%;
+    padding: var(--space-s);
+    font-size: var(--font-size-0);
+    border: none;
+    border-radius: var(--space-s);
+    background: var(--clr-neutral-800);
+    color: var(--clr-neutral-100);
+  }
+
+  select {
+    cursor: pointer;
+    border: 1px solid var(--clr-pink-400);
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23d63384' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right var(--space-s) center;
+    background-size: 2rem;
+  }
+
+  select:focus,
+  input:focus {
+    outline: none;
+    border: 1px solid var(--clr-pink-500);
+    box-shadow: 0 0 0 2px var(--clr-pink-200);
+  }
+
+  option {
+    background: var(--clr-neutral-800);
+    color: var(--clr-neutral-100);
+    padding: var(--space-s);
+    border-radius: var(--space-s);
+    font-size: var(--font-size-0);
+  }
+
+  input::placeholder {
+    color: var(--clr-neutral-400);
+  }
+
+  .form-msg {
+    margin-top: var(--space-m);
+    padding: var(--space-s);
+    font-size: var(--font-size-1);
+    border-radius: var(--space-xs);
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .form-msg.success {
+    color: var(--clr-green-500, hsl(140, 60%, 45%));
+    background: hsla(140, 60%, 90%, 0.3);
+    border: 1px solid var(--clr-green-400, hsl(140, 60%, 60%));
+    box-shadow: 0 0 0.5rem hsla(140, 50%, 60%, 0.2);
+  }
+
+  .form-msg.error {
+    color: var(--clr-red-500, hsl(0, 70%, 55%));
+    background: hsla(0, 70%, 90%, 0.3);
+    border: 1px solid var(--clr-red-400, hsl(0, 70%, 65%));
+    box-shadow: 0 0 0.5rem hsla(0, 70%, 60%, 0.2);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 560px) {
+    .contact {
+      inline-size: 90%;
+      padding: 1rem;
+    }
+    .title {
+      font-size: 1.5rem;
+    }
+  }
 </style>

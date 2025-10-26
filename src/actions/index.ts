@@ -5,7 +5,7 @@ export const server = {
   submitForm: defineAction({
     accept: "form",
     input: z.object({
-      name: z.string().min(2, "Введите имя"),
+      name: z.string().min(2, "Введите Имя Фамилию"),
       phone: z.string().min(5, "Введите телефон"),
       email: z.string().email("Некорректный email"),
       tariff: z.string().optional(),
@@ -22,20 +22,26 @@ export const server = {
         date: now,
       }
 
+      console.log("Payload to send:", payload)
+
       const GOOGLE_SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbywEJr20BdbqUrfJhIfgDoBqPhkoapl31lj79Whj-LoSAl5_cppzr6h_ODWisUpWVwo/exec"
+        "https://script.google.com/macros/s/AKfycbyVogQQxTwGuFqDp-b5y_lESjczS9ySyjs2LGt-i_eZc4PhH8hHN-LeWvjVUSPVqez3-A/exec"
 
       const res = await fetch(GOOGLE_SCRIPT_URL, {
-        method: "POST",
+        redirect: 'follow',
+        method: 'POST',
         body: JSON.stringify(payload),
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
       })
 
       if (!res.ok) {
         throw new Error(`Ошибка при отправке формы: ${res.status}`)
       }
 
-      return { success: true }
-    },
+      const headers = new Headers();
+        headers.append("Set-Cookie", "form_submitted=true; Path=/; HttpOnly")
+
+        return new Response(JSON.stringify({ success: true }), { headers })
+      }
   }),
 }

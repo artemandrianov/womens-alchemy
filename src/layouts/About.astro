@@ -1,50 +1,55 @@
----
----
-
-<section id="about">
-  <figure class="about-figure primary-layout">
+<section id="about" class="about-section">
+  <figure class="about-figure primary-layout animation-fadeIn">
     <div class="content-text">
       <div class="heading">
-        <h1>Ксения Трофимова</h1>
+        <h1 class="heading-title">Ксения Трофимова</h1>
       </div>
-      <p>
-        <span class="accent-text">С детства нас учат быть «хорошими» — удобными дочерьми, жёнами,
-        матерями. Но где в этом ты? Где твои настоящие желания и твоя энергия?</span></br>
-        Я поняла: пока живёшь так, как «правильно для всех», теряешь себя. Жизнь
-        становится линейной, без яркости и глубины. <span class="accent-text">Всё меняется в тот момент,
-        когда берёшь ответственность за свои решения и позволяешь себе быть
-        Главной Героиней своей истории.</span></br>
-        Я — Ксения Трофимова: актриса театра и
-        кино, педагог по ораторскому и актёрскому мастерству, астро-психолог и
-        секс-коуч.</br>
-        <span class="accent-text">Моя миссия — помогать женщинам раскрывать себя, находить
-        истинные желания, управлять своей энергией и превращать жизнь в
-        пространство силы и удовольствия.</span></br>
-        Уже более 100 женщин благодаря моим
-        практикам нашли своё предназначение, научились пользоваться женскими
-        «фишками» для ресурсного состояния и продолжают расти и развиваться.</br>
+
+      <p class="lead">
+        <span class="accent-text">
+          С детства нас учат быть «хорошими» — удобными дочерьми, жёнами, матерями. Но где в этом ты?
+        </span><br/>
+        Я поняла: пока живёшь так, как «правильно для всех», теряешь себя. Жизнь становится линейной, без яркости и глубины.
+        <span class="accent-text">
+          Всё меняется в тот момент, когда берёшь ответственность за свои решения и позволяешь себе быть Главной Героиней своей истории.
+        </span><br/>
+        Я — Ксения Трофимова: актриса театра и кино, педагог по ораторскому и актёрскому мастерству, астро-психолог и секс-коуч.<br/>
+        <span class="accent-text">
+          Моя миссия — помогать женщинам раскрывать себя, находить истинные желания, управлять своей энергией и превращать жизнь в пространство силы и удовольствия.
+        </span><br/>
+        Уже более 100 женщин благодаря моим практикам нашли своё предназначение, научились пользоваться женскими «фишками» для ресурсного состояния и продолжают расти и развиваться.<br/>
         Теперь очередь за тобой!
       </p>
     </div>
 
-    <img src="/about-img.jpg" alt="Ксения Трофимова" class="content-image" />
+    <img
+      src="/about-img.jpg"
+      alt="Ксения Трофимова"
+      class="content-image animation-slide-in-bottom"
+      loading="lazy"
+      decoding="async"
+      width="640"
+      height="640"
+    />
 
     <figcaption class="visually-hidden">
       Ксения Трофимова — актриса театра и кино, педагог, астропсихолог и секс-коуч.
     </figcaption>
   </figure>
-  <div class="results">
-    <div class="result">10+ авторских методик по работе</br>с энергией, телом и голосом</div>
+
+  <div class="results results--responsive animation-slide-up">
+    <div class="result">10+ авторских методик по работе<br/>с энергией, телом и голосом</div>
     <div class="result">Более 6 лет практики в сфере женской энергии</div>
     <div class="result">100+ историй личного пробуждения, благодаря трансформации</div>
   </div>
 </section>
 
-<style scoped>
-  #about {
+<style>
+  .about-section {
     display: flex;
     flex-direction: column;
-    height: 100svh;
+    min-height: 100svh;
+    height: auto;
     margin-block: var(--space-l);
   }
 
@@ -52,42 +57,39 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-block: var(--space-xl);
     color: var(--clr-neutral-100);
     overflow: hidden;
     gap: var(--space-l);
+    padding-block: max(2rem, 5vh);
   }
 
   .heading {
     display: inline-block;
     position: relative;
     z-index: 0;
-
-
-    &::after {
-      content: "";
-      position: absolute;
-      top: -0.5rem;
-      right: -10rem;
-      width: 200px;
-      height: 200px;
-      background: var(--clr-pink-400);
-      clip-path: path(
-        "M49.2807 0L55.9016 42.6598L98.5614 49.2807L55.9016 55.9016L49.2807 98.5614L42.6598 55.9016L0 49.2807L42.6598 42.6598L49.2807 0Z"
-      );
-      z-index: 1;
-      pointer-events: none;
-    }
+    padding-top: 1.2rem;
+  }
+  .heading::after {
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    right: -4rem;
+    width: 200px;
+    height: 200px;
+    background: var(--clr-pink-400);
+    clip-path: path("M49.2807 0L55.9016 42.6598L98.5614 49.2807L55.9016 55.9016L49.2807 98.5614L42.6598 55.9016L0 49.2807L42.6598 42.6598L49.2807 0Z");
+    z-index: 1;
+    pointer-events: none;
   }
 
-  .heading h1 {
+  .heading-title {
     font-size: var(--font-size-5);
     margin-bottom: var(--space-s);
     line-height: 100%;
     font-weight: 600;
   }
 
-  .content-text p {
+  .lead {
     line-height: 1.6;
     font-weight: 400;
     margin-bottom: var(--space-l);
@@ -100,7 +102,6 @@
 
   .content-image {
     flex: 0 0 auto;
-    block-size: 100%;
     border-radius: var(--border-radius);
     object-fit: cover;
   }
@@ -113,14 +114,13 @@
   }
 
   .result {
-    background-color: var(--clr-pink-400);
+    background: var(--clr-pink-400);
     color: var(--clr-neutral-900);
     border-radius: 2rem;
     padding: 0.8rem 1.4rem;
     font-weight: 600;
     font-size: 0.95rem;
     text-align: center;
-    white-space: normal; /* ⬅️ разрешает перенос */
     word-break: break-word;
   }
 
@@ -136,24 +136,68 @@
     border: 0;
   }
 
-  @media (max-width: 768px) {
+  /* ----------  MOBILE  ---------- */
+  @media (max-width: 700px) {
+    .about-section {
+      height: auto;
+      padding-block: var(--space-m);
+      margin-inline: var(--space-xs);
+    }
+
     .about-figure {
       flex-direction: column;
+      gap: var(--space-m);
+      align-items: center;
       text-align: center;
+      padding-block: var(--space-m);
     }
 
     .content-text {
       order: 2;
+      width: 100%;
+    }
+
+    .heading-title {
+      font-size: var(--font-size-4);
+      line-height: 1.05;
+    }
+
+    .heading::after {
+      display: none;
     }
 
     .content-image {
       order: 1;
-      max-width: 220px;
-      margin-bottom: var(--space-l);
+      width: min(52vw, 260px);
+      height: min(52vw, 260px);
+      border-radius: 24px;
     }
 
-    .heading h1 {
-      font-size: var(--font-size-4);
+    .lead {
+      max-width: 48ch;
+      margin-inline: auto;
+      font-size: var(--font-size-0);
+      line-height: 1.55;
+    }
+
+    .results {
+      grid-template-columns: 1fr;
+      gap: var(--space-2xs);
+    }
+  }
+
+  @media (max-width: 420px) {
+    .results {
+      display: flex;
+      gap: var(--space-s);
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      padding-inline: var(--space-xs);
+    }
+    .result {
+      flex: 0 0 auto;
+      min-width: 72%;
+      scroll-snap-align: start;
     }
   }
 </style>
