@@ -1,14 +1,15 @@
 ---
-import "../styles/global.css";
-import "../styles/variables.css";
-import Hero from "../layouts/Hero.astro";
-import HowItWorks from "../layouts/HowItWorks.astro";
-import About from "../layouts/About.astro";
-import Pricing from "../layouts/Pricing.astro";
+import "../styles/global.css"
+import "../styles/variables.css"
+import Hero from "../layouts/Hero.astro"
+import HowItWorks from "../layouts/HowItWorks.astro"
+import About from "../layouts/About.astro"
+import Pricing from "../layouts/Pricing.astro"
 import ContactUs from "../layouts/ContactUs.astro"
-import Reviews from "../layouts/Reviews.astro";
+import Reviews from "../layouts/Reviews.astro"
 import Footer from "../components/Footer.astro"
 import { SEO } from "astro-seo"
+import PostHog from "../components/posthog.astro"
 
 const metaDescription = "Курс Жeнская алхимия — 4 стихии для трансформации. Путь к раскрытию потенциала, уверенности и самовыражению."
 const title = "Женская алхимия: 4 стихии для трансформации"
@@ -48,6 +49,7 @@ const title = "Женская алхимия: 4 стихии для трансф
         meta: [{ name: "robots", content: "index, follow" }],
       }}
     />
+    <PostHog />
   </head>
   <body class="primary-layout">
     <Hero />
