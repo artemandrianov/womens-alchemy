@@ -1,9 +1,9 @@
 ---
-import Header from "../components/Header.astro"
-import Button from "../components/Button.astro"
+import Header from "../components/Header.astro";
+import Button from "../components/Button.astro";
 
-const userAgent = Astro.request.headers.get("user-agent") || ""
-const isMobile = /mobile|android|iphone|ipad|phone/i.test(userAgent)
+const userAgent = Astro.request.headers.get("user-agent") || "";
+const isMobile = /mobile|android|iphone|ipad|phone/i.test(userAgent);
 ---
 
 <section class="hero full-width">
@@ -27,7 +27,7 @@ const isMobile = /mobile|android|iphone|ipad|phone/i.test(userAgent)
 
       <div class="cta-row">
         <Button text="Выбрать тариф" variant="primary" href="#pricing" />
-        { !isMobile && <Button text="Оставить заявку" href="#contact" /> }
+        {!isMobile && <Button text="Оставить заявку" href="#contact" />}
       </div>
     </div>
 
@@ -66,15 +66,22 @@ const isMobile = /mobile|android|iphone|ipad|phone/i.test(userAgent)
     overflow: hidden;
     gap: var(--space-xl);
   }
-  .content-text { flex: 1; }
-  .content-img { block-size: var(--block-size); }
+  .content-text {
+    flex: 1;
+  }
+  .content-img {
+    block-size: var(--block-size);
+  }
   .content-img img {
     height: 100%;
     border-radius: var(--border-radius);
     width: auto;
     object-fit: cover;
   }
-  .heading { position: relative; display: inline-block; }
+  .heading {
+    position: relative;
+    display: inline-block;
+  }
   .heading h1 {
     font-size: var(--font-size-5);
     margin-bottom: var(--space-s);
@@ -107,18 +114,23 @@ const isMobile = /mobile|android|iphone|ipad|phone/i.test(userAgent)
   }
 
   @media (max-width: 768px) {
+    .hero {
+      position: relative;
+      overflow: hidden;
+    }
     .hero-slider {
       position: absolute;
       inset: 0;
-      z-index: 0;
-    }
-    .hero-slider {
+      height: 100%;
+      z-index: 1;
       display: flex;
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       scrollbar-width: none;
     }
-    .hero-slider::-webkit-scrollbar { display: none; }
+    .hero-slider::-webkit-scrollbar {
+      display: none;
+    }
     .slide {
       flex: 0 0 100%;
       scroll-snap-align: start;
@@ -134,6 +146,8 @@ const isMobile = /mobile|android|iphone|ipad|phone/i.test(userAgent)
       margin-top: auto;
       padding-bottom: 0;
       padding-inline: 0;
+      position: relative;
+      z-index: 2;
     }
     .content-text {
       position: relative;
@@ -146,7 +160,9 @@ const isMobile = /mobile|android|iphone|ipad|phone/i.test(userAgent)
       );
     }
 
-    .content-text > *:not(.cta-row) {font-weight: 700;}
+    .content-text > *:not(.cta-row) {
+      font-weight: 700;
+    }
 
     .hero-content p {
       line-height: 100%;
@@ -157,7 +173,7 @@ const isMobile = /mobile|android|iphone|ipad|phone/i.test(userAgent)
       justify-content: center;
       margin-bottom: var(--space-xl-2xl);
       -webkit-text-fill-color: initial;
-            text-fill-color: initial;
+      text-fill-color: initial;
     }
     .heading {
       position: relative;
@@ -194,7 +210,9 @@ const isMobile = /mobile|android|iphone|ipad|phone/i.test(userAgent)
       cursor: pointer;
       transition: background 0.3s;
     }
-    .dot.active { background: var(--clr-snow); }
+    .dot.active {
+      background: var(--clr-snow);
+    }
   }
 
   @media (min-width: 769px) {
@@ -214,7 +232,7 @@ const isMobile = /mobile|android|iphone|ipad|phone/i.test(userAgent)
       const idx = Number(d.dataset.slide);
       slider.scrollTo({ left: slider.offsetWidth * idx, behavior: "smooth" });
       dots.forEach((el) => el.classList.toggle("active", el === d));
-    })
+    }),
   );
 
   slider.addEventListener("scroll", () => {
