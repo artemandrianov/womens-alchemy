@@ -5,7 +5,7 @@ const { class: className } = Astro.props;
 <footer class:list={["footer", className]}>
   <div class="content flex-group flow">
     <img src="/logo.webp" alt="Женская алхимия" class="logo" />
-    <nav class="mobile">
+    <nav class="nav-desktop">
       <ul>
         <li>
           <a href="#howitworks">О курсе</a>
@@ -121,19 +121,20 @@ const { class: className } = Astro.props;
   }
 
   @media (max-width: 700px) {
-    .mobile {
+    .nav-desktop {
       display: none;
     }
     img.logo {
       height: 50px;
     }
     .social {
-      list-style: none;
-      li {
-        a {
-          text-decoration: none;
-        }
-      }
+      justify-content: center;
+      gap: var(--space-xl);
+    }
+
+    .social li a span {
+      font-size: var(--font-size-0);
+      letter-spacing: 0.5px;
     }
   }
 </style>

@@ -71,6 +71,10 @@ const {
     font-size: var(--font-size-0);
     text-decoration: none;
     line-height: normal;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: none;
+    -webkit-tap-highlight-color: transparent;
   }
 
   .cta-btn:hover,
@@ -87,6 +91,8 @@ const {
   .cta-btn--primary {
     color: var(--clr-white);
     background-color: var(--clr-accent-primary);
+    background-clip: padding-box;
+    -webkit-background-clip: padding-box;
   }
 
   .cta-btn--primary:hover,
