@@ -4,7 +4,7 @@ const { class: className } = Astro.props;
 
 <footer class:list={["footer", className]}>
   <div class="content flex-group flow">
-    <img src="/logo.png" alt="Женская алхимия" class="logo" />
+    <img src="/logo.webp" alt="Женская алхимия" class="logo" />
     <nav class="mobile">
       <ul>
         <li>
@@ -26,14 +26,22 @@ const { class: className } = Astro.props;
     </nav>
     <ul class="social">
       <li>
-        <a href="https://www.instagram.com/ksu_trofimova_/" target="_blank" rel="noopener noreferrer">
-          <img src="/nelzyagram.png" alt="">
+        <a
+          href="https://www.instagram.com/ksu_trofimova_/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src="/nelzyagram.webp" alt="" />
           <span>INST</span>
         </a>
       </li>
       <li>
-        <a href="https://t.me/trofimovaKsu" target="_blank" rel="noopener noreferrer">
-          <img src="/telegram.png" alt="">
+        <a
+          href="https://t.me/trofimovaKsu"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src="/telegram.webp" alt="" />
           <span>TG</span>
         </a>
       </li>
@@ -118,6 +126,13 @@ const { class: className } = Astro.props;
     }
     img.logo {
       height: 50px;
-    } 
+    }
+    .social {
+      list-style: none;
+      li {
+        a {
+          text-decoration: none;
+        }
+    }
   }
 </style>
