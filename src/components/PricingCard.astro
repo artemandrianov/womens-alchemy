@@ -1,105 +1,110 @@
 ---
-import Button from "./Button.astro"
-import { pricingPlans } from "../data/pricingData"
+import Button from "./Button.astro";
+import { pricingPlans } from "../data/pricingData";
 ---
 
 <div class="pricing-scroll">
   <div class="pricing-track">
-    {pricingPlans.map((plan, i) => (
-      <article class={`pricing-card ${plan.popular ? "popular" : ""}`}>
-        {plan.popular && <span class="badge">Популярный выбор</span>}
+    {
+      pricingPlans.map((plan, i) => (
+        <article class={`pricing-card ${plan.popular ? "popular" : ""}`}>
+          {plan.popular && <span class="badge">Популярный выбор</span>}
 
-        <h3 class="card-title" style={`background:${plan.color}`}>
-          {plan.title}
-        </h3>
+          <h3 class="card-title" style={`background:${plan.color}`}>
+            {plan.title}
+          </h3>
 
-        <div class="features-wrapper" id={`features-${i}`}>
-          <ul class="card-features">
-            {plan.features.map(item => <li>{item}</li>)}
-          </ul>
-          <div class="fade" />
-        </div>
+          <div class="features-wrapper" id={`features-${i}`}>
+            <ul class="card-features">
+              {plan.features.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+            <div class="fade" />
+          </div>
 
-        {plan.features.length > 5 && (
-          <button class="toggle-btn" data-target={`features-${i}`}>
-            Посмотреть ещё ↓
-          </button>
-        )}
+          {plan.features.length > 5 && (
+            <button class="toggle-btn" data-target={`features-${i}`}>
+              Посмотреть ещё ↓
+            </button>
+          )}
 
-        <footer class="card-footer">
-          <Button
-            href={`?tariff=${plan.id}#contact`}
-            text="Купить сейчас"
-            variant="primary"
-            class="buy-now"
-          />
-          <p class="card-price">{plan.price}</p>
-        </footer>
-      </article>
-    ))}
+          <footer class="card-footer">
+            <Button
+              href={`?tariff=${plan.id}#contact`}
+              text="Купить сейчас"
+              variant="primary"
+              class="buy-now"
+            />
+            <p class="card-price">{plan.price}</p>
+          </footer>
+        </article>
+      ))
+    }
   </div>
 </div>
 
 <script is:inline>
-document.addEventListener("DOMContentLoaded", () => {
-  const collapsedMax = 350
+  document.addEventListener("DOMContentLoaded", () => {
+    const collapsedMax = 350;
 
-  document.querySelectorAll(".toggle-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const targetId = btn.getAttribute("data-target")
-      if (!targetId) return
+    document.querySelectorAll(".toggle-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const targetId = btn.getAttribute("data-target");
+        if (!targetId) return;
 
-      const wrapper = document.getElementById(targetId)
-      if (!wrapper) return
+        const wrapper = document.getElementById(targetId);
+        if (!wrapper) return;
 
-      const isExpanded = wrapper.classList.contains("expanded")
+        const isExpanded = wrapper.classList.contains("expanded");
 
-      if (!isExpanded) {
-        wrapper.style.maxHeight = wrapper.scrollHeight + "px"
-        wrapper.classList.add("expanded")
-        btn.textContent = "Скрыть ↑"
-        btn.setAttribute("aria-expanded", "true")
+        if (!isExpanded) {
+          wrapper.style.maxHeight = wrapper.scrollHeight + "px";
+          wrapper.classList.add("expanded");
+          btn.textContent = "Скрыть ↑";
+          btn.setAttribute("aria-expanded", "true");
 
-        const onTransitionEnd = (e) => {
-          if ((e).propertyName === "max-height") {
-            wrapper.style.maxHeight = "none"
-            wrapper.removeEventListener("transitionend", onTransitionEnd)
-          }
+          const onTransitionEnd = (e) => {
+            if (e.propertyName === "max-height") {
+              wrapper.style.maxHeight = "none";
+              wrapper.removeEventListener("transitionend", onTransitionEnd);
+            }
+          };
+          wrapper.addEventListener("transitionend", onTransitionEnd);
+        } else {
+          const current = wrapper.scrollHeight;
+          wrapper.style.maxHeight = current + "px";
+          wrapper.offsetHeight;
+          wrapper.style.maxHeight = collapsedMax + "px";
+          wrapper.classList.remove("expanded");
+
+          btn.textContent = "Посмотреть ещё ↓";
+          btn.setAttribute("aria-expanded", "false");
         }
-        wrapper.addEventListener("transitionend", onTransitionEnd)
-      } else {
-        const current = wrapper.scrollHeight
-        wrapper.style.maxHeight = current + "px"
-        wrapper.offsetHeight
-        wrapper.style.maxHeight = collapsedMax + "px"
-        wrapper.classList.remove("expanded")
+      });
+    });
 
-        btn.textContent = "Посмотреть ещё ↓"
-        btn.setAttribute("aria-expanded", "false")
-      }
-    })
-  })
+    document.querySelectorAll(".buy-now").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
 
-  document.querySelectorAll(".buy-now").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      e.preventDefault()
+        const href = btn.getAttribute("href") || "";
+        const newUrl = new URL(href, window.location.href);
+        newUrl.hash = "contact";
 
-      const href = btn.getAttribute("href") || ""
-      const newUrl = new URL(href, window.location.href)
-      newUrl.hash = "contact"
+        history.pushState({}, "", newUrl.toString());
 
-      history.pushState({}, "", newUrl.toString())
+        const target = document.getElementById("contact");
+        if (target) target.scrollIntoView({ behavior: "smooth" });
 
-      const target = document.getElementById("contact")
-      if (target) target.scrollIntoView({ behavior: "smooth" })
-
-      const tariff = newUrl.searchParams.get("tariff")
-      window.dispatchEvent(new CustomEvent("urlchange", { detail: { tariff } }))
-    })
-  })
-})
+        const tariff = newUrl.searchParams.get("tariff");
+        window.dispatchEvent(
+          new CustomEvent("urlchange", { detail: { tariff } }),
+        );
+      });
+    });
+  });
 </script>
-
 
 <style scoped>
   .pricing {
@@ -132,6 +137,12 @@ document.addEventListener("DOMContentLoaded", () => {
     box-shadow: var(--box-shadow);
     padding-bottom: 1rem;
   }
+  .pricing-card,
+  .pricing-card * {
+    hyphens: none;
+    overflow-wrap: break-word;
+    text-wrap: balance;
+  }
 
   .card-title {
     border-top-left-radius: var(--border-radius);
@@ -149,7 +160,9 @@ document.addEventListener("DOMContentLoaded", () => {
     position: relative;
     max-height: 350px;
     overflow: hidden;
-    transition: max-height 0.6s ease, padding 0.4s ease;
+    transition:
+      max-height 0.6s ease,
+      padding 0.4s ease;
   }
 
   .features-wrapper.expanded .fade {
@@ -165,6 +178,17 @@ document.addEventListener("DOMContentLoaded", () => {
     list-style-type: none;
   }
 
+  .card-features li {
+    white-space: normal;
+    line-height: 1.5;
+    word-spacing: 0.05em;
+  }
+
+  .card-title,
+  .card-features li,
+  .card-price {
+    text-wrap: pretty;
+  }
   .card-features li::before {
     content: "•";
     color: var(--clr-pink-500);
@@ -213,11 +237,14 @@ document.addEventListener("DOMContentLoaded", () => {
     color: var(--clr-pink-500);
     font-weight: 600;
     font-size: var(--font-size-1);
+    text-align: center;
   }
 
   .pricing-card {
     position: relative;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
   }
 
   .pricing-card.popular {
@@ -249,84 +276,83 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   @media (max-width: 700px) {
-
     .full-width {
       display: none;
     }
-  .pricing-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-m);
-    padding-inline: var(--space-xs);
+    .pricing-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-m);
+      padding-inline: var(--space-xs);
+    }
+
+    .pricing-card {
+      transform: none !important;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+
+    .pricing-card.popular {
+      border-width: 1.5px;
+    }
+
+    .card-title {
+      font-size: var(--font-size-3);
+      padding: var(--space-s);
+    }
+
+    .card-features {
+      padding-inline: var(--space-s);
+    }
+
+    .toggle-btn {
+      font-size: 0.9rem;
+      margin-top: 0.2rem;
+    }
+
+    .card-footer {
+      gap: 0.5rem;
+    }
+
+    .card-price {
+      font-size: var(--font-size-0);
+    }
   }
 
-  .pricing-card {
-    transform: none !important;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-  }
-
-  .pricing-card.popular {
-    border-width: 1.5px;
-  }
-
-  .card-title {
-    font-size: var(--font-size-3);
-    padding: var(--space-s);
-  }
-
-  .card-features {
-    padding-inline: var(--space-s);
-  }
-
-  .toggle-btn {
-    font-size: 0.9rem;
-    margin-top: 0.2rem;
-  }
-
-  .card-footer {
-    gap: 0.5rem;
-  }
-
-  .card-price {
-    font-size: var(--font-size-0);
-  }
-}
-
-/* ---------- DESKTOP ---------- */
-.pricing-scroll {
-  container-type: inline-size;
-}
-.pricing-track {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--space-s);
-}
-
-/* ---------- MOBILE ---------- */
-@container (max-width: 700px) {
+  /* ---------- DESKTOP ---------- */
   .pricing-scroll {
-    overflow-x: auto;          /* горизонтальный скролл */
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;     /* Firefox */
+    container-type: inline-size;
+    padding-block: var(--space-xs);
   }
-  .pricing-scroll::-webkit-scrollbar {
-    display: none;             /* Chrome/Safari */
-  }
-
   .pricing-track {
-    display: flex;             /* лента */
-    gap: var(--space-m);
-    padding-inline: var(--space-xs);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-s);
   }
 
-  .pricing-card {
-    flex: 0 0 82cqi;           /* 82% ширины контейнера – видна часть след. карточки */
-    scroll-snap-align: center;
-    transform: none !important;
-  }
+  /* ---------- MOBILE ---------- */
+  @container (max-width: 700px) {
+    .pricing-scroll {
+      overflow-x: auto; /* горизонтальный скролл */
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none; /* Firefox */
+    }
+    .pricing-scroll::-webkit-scrollbar {
+      display: none; /* Chrome/Safari */
+    }
 
-  .pricing-card.popular {
-    border-width: 2px;
-  }
-}
+    .pricing-track {
+      display: flex; /* лента */
+      gap: var(--space-m);
+      padding-inline: var(--space-xs);
+    }
 
+    .pricing-card {
+      flex: 0 0 82cqi; /* 82% ширины контейнера – видна часть след. карточки */
+      scroll-snap-align: center;
+      transform: none !important;
+    }
+
+    .pricing-card.popular {
+      border-width: 2px;
+    }
+  }
 </style>
