@@ -1,11 +1,11 @@
 ---
-import { reviewsData } from "../data/reviewsData"
-import ReviewCard from "../components/ReviewCard.astro"
-import ScrollSnap from "../components/ScrollSnap.astro"
+import { reviewsData } from "../data/reviewsData";
+import ReviewCard from "../components/ReviewCard.astro";
+import ScrollSnap from "../components/ScrollSnap.astro";
 ---
 
 <section id="reviews" class="reviews full-width">
-  <h1 class="reviews-title">Познакомьтесь с историями успеха</h1>
+  <h1 class="reviews-title">Истории успеха</h1>
 
   <ScrollSnap snapAlign="center" gap="var(--space-m)">
     {reviewsData.map((r) => <ReviewCard {...r} />)}
@@ -36,7 +36,7 @@ import ScrollSnap from "../components/ScrollSnap.astro"
     }
     .reviews-title {
       font-size: var(--font-size-3);
-      margin-bottom: var(--space-l);
+      margin: 0%;
     }
   }
 </style>

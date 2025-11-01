@@ -56,68 +56,60 @@ const { class: className } = Astro.props;
     container-name: header;
     padding: var(--space-m) 0;
     z-index: 3;
+  }
+  footer > .content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .logo {
+    height: 65px;
+    width: auto;
+  }
 
-    div {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+  .nav-desktop ul {
+    list-style: none;
+    display: flex;
+    margin: var(--zero);
+    padding: var(--zero);
+    gap: var(--space-xl);
+  }
+  .nav-desktop li a {
+    text-decoration: none;
+    color: var(--foreground-1);
+    font-weight: bold;
+    transition: color 0.3s;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--clr-accent-primary-hover);
     }
+  }
 
-    .logo {
-      height: 65px;
-      width: auto;
-    }
-
-    nav ul {
-      list-style: none;
-      display: flex;
-      margin: var(--zero);
-      padding: var(--zero);
-      gap: var(--space-xl);
-
-      li a {
-        text-decoration: none;
-        color: var(--foreground-1);
-        font-weight: bold;
-        transition: color 0.3s;
-        cursor: pointer;
-
-        &:hover {
-          color: var(--clr-accent-primary-hover);
-        }
-      }
-    }
-
-    .social {
-      list-style: none;
-      display: flex;
-      margin: var(--zero);
-      padding: var(--zero);
-      gap: var(--space-xl);
-
-      li {
-        a {
-          display: flex;
-          align-items: center;
-          gap: var(--space-s);
-          text-decoration: none;
-          color: var(--foreground-1);
-          font-weight: bold;
-          transition: color 0.3s;
-          cursor: pointer;
-
-          &:hover {
-            color: var(--clr-accent-primary-hover);
-          }
-
-          img {
-            height: 24px;
-            width: 24px;
-            object-fit: contain;
-          }
-        }
-      }
-    }
+  .social {
+    list-style: none;
+    display: flex;
+    margin: var(--zero);
+    padding: var(--zero);
+    gap: var(--space-xl);
+  }
+  .social li a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+    text-decoration: none;
+    color: var(--foreground-1);
+    font-weight: bold;
+    transition: color 0.3s;
+    cursor: pointer;
+  }
+  .social a:hover {
+    color: var(--clr-accent-primary-hover);
+  }
+  .social img {
+    height: 24px;
+    width: 24px;
+    object-fit: contain;
   }
 
   @media (max-width: 700px) {

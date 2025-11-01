@@ -160,7 +160,7 @@ const isMobile = /mobile|android|iphone|ipad|phone/i.test(userAgent);
       );
     }
 
-    .content-text > *:not(.cta-row) {
+    .heading > *:not(.cta-row) {
       font-weight: 700;
     }
 
@@ -168,6 +168,8 @@ const isMobile = /mobile|android|iphone|ipad|phone/i.test(userAgent);
       line-height: 100%;
       text-align: start;
       font-size: var(--font-size--1);
+      margin-bottom: var(--space-m);
+      font-weight: 500;
     }
     .cta-row {
       justify-content: center;
@@ -184,6 +186,7 @@ const isMobile = /mobile|android|iphone|ipad|phone/i.test(userAgent);
       margin-bottom: var(--space-s);
       line-height: 100%;
       text-align: start;
+      margin-bottom: 0;
     }
     .heading::before,
     .content-img {
