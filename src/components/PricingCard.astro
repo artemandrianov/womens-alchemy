@@ -3,7 +3,12 @@ import Button from "./Button.astro";
 import { pricingPlans } from "../data/pricingData";
 ---
 
-<div class="pricing-scroll">
+<div
+  class="pricing-scroll"
+  role="region"
+  aria-label="Тарифные планы"
+  tabindex="0"
+>
   <div class="pricing-track">
     {
       pricingPlans.map((plan, i) => (
@@ -24,7 +29,12 @@ import { pricingPlans } from "../data/pricingData";
           </div>
 
           {plan.features.length > 5 && (
-            <button class="toggle-btn" data-target={`features-${i}`}>
+            <button
+              class="toggle-btn"
+              data-target={`features-${i}`}
+              aria-controls={`features-${i}`}
+              aria-expanded="false"
+            >
               Посмотреть ещё ↓
             </button>
           )}
@@ -136,6 +146,10 @@ import { pricingPlans } from "../data/pricingData";
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     padding-bottom: 1rem;
+    position: relative;
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease;
   }
   .pricing-card,
   .pricing-card * {
@@ -143,7 +157,6 @@ import { pricingPlans } from "../data/pricingData";
     overflow-wrap: break-word;
     text-wrap: balance;
   }
-
   .card-title {
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);
@@ -154,8 +167,8 @@ import { pricingPlans } from "../data/pricingData";
     text-align: center;
     margin: 0;
     padding: var(--space-m);
+    text-wrap: pretty;
   }
-
   .features-wrapper {
     position: relative;
     max-height: 350px;
@@ -164,11 +177,9 @@ import { pricingPlans } from "../data/pricingData";
       max-height 0.6s ease,
       padding 0.4s ease;
   }
-
   .features-wrapper.expanded .fade {
     opacity: 0;
   }
-
   .card-features {
     padding: 0 35px;
     display: flex;
@@ -177,16 +188,10 @@ import { pricingPlans } from "../data/pricingData";
     color: var(--clr-pink-800);
     list-style-type: none;
   }
-
   .card-features li {
     white-space: normal;
     line-height: 1.5;
     word-spacing: 0.05em;
-  }
-
-  .card-title,
-  .card-features li,
-  .card-price {
     text-wrap: pretty;
   }
   .card-features li::before {
@@ -194,7 +199,6 @@ import { pricingPlans } from "../data/pricingData";
     color: var(--clr-pink-500);
     padding-right: var(--space-3xs);
   }
-
   .fade {
     content: "";
     position: absolute;
@@ -206,11 +210,9 @@ import { pricingPlans } from "../data/pricingData";
     pointer-events: none;
     transition: opacity 0.3s ease;
   }
-
   .features-wrapper.expanded .fade {
     opacity: 0;
   }
-
   .toggle-btn {
     background: none;
     border: none;
@@ -221,47 +223,34 @@ import { pricingPlans } from "../data/pricingData";
     display: block;
     transition: color 0.2s ease;
   }
-
   .toggle-btn:hover {
     color: var(--clr-pink-500);
   }
-
   .card-footer {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.8rem;
   }
-
   .card-price {
     color: var(--clr-pink-500);
     font-weight: 600;
     font-size: var(--font-size-1);
     text-align: center;
+    text-wrap: pretty;
   }
-
-  .pricing-card {
-    position: relative;
-    transition:
-      transform 0.3s ease,
-      box-shadow 0.3s ease;
-  }
-
   .pricing-card.popular {
     border: 2px solid var(--clr-pink-500);
     transform: scale(1.04);
     box-shadow: 0 10px 20px rgba(255, 0, 120, 0.2);
     z-index: 2;
   }
-
   .pricing-card:hover {
     transform: scale(1.01);
   }
-
   .pricing-card.popular:hover {
     transform: scale(1.06);
   }
-
   .badge {
     position: absolute;
     top: -12px;
@@ -279,19 +268,43 @@ import { pricingPlans } from "../data/pricingData";
     .full-width {
       display: none;
     }
-    .pricing-grid {
-      grid-template-columns: 1fr;
+  }
+  .pricing-scroll {
+    container-type: inline-size;
+    padding-block: var(--space-xs);
+  }
+  .pricing-track {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-s);
+  }
+
+  /* ---------- MOBILE---------- */
+  @container (max-width: 700px) {
+    .pricing-scroll {
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      scroll-padding-inline: var(--space-xs);
+      scrollbar-width: none;
+    }
+    .pricing-scroll::-webkit-scrollbar {
+      display: none;
+    }
+
+    .pricing-track {
+      display: flex;
       gap: var(--space-m);
       padding-inline: var(--space-xs);
     }
-
     .pricing-card {
+      flex: 0 0 82cqi;
+      scroll-snap-align: center;
       transform: none !important;
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
     }
 
     .pricing-card.popular {
-      border-width: 1.5px;
+      border-width: 2px;
     }
 
     .card-title {
@@ -314,45 +327,6 @@ import { pricingPlans } from "../data/pricingData";
 
     .card-price {
       font-size: var(--font-size-0);
-    }
-  }
-
-  /* ---------- DESKTOP ---------- */
-  .pricing-scroll {
-    container-type: inline-size;
-    padding-block: var(--space-xs);
-  }
-  .pricing-track {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: var(--space-s);
-  }
-
-  /* ---------- MOBILE ---------- */
-  @container (max-width: 700px) {
-    .pricing-scroll {
-      overflow-x: auto; /* горизонтальный скролл */
-      scroll-snap-type: x mandatory;
-      scrollbar-width: none; /* Firefox */
-    }
-    .pricing-scroll::-webkit-scrollbar {
-      display: none; /* Chrome/Safari */
-    }
-
-    .pricing-track {
-      display: flex; /* лента */
-      gap: var(--space-m);
-      padding-inline: var(--space-xs);
-    }
-
-    .pricing-card {
-      flex: 0 0 82cqi; /* 82% ширины контейнера – видна часть след. карточки */
-      scroll-snap-align: center;
-      transform: none !important;
-    }
-
-    .pricing-card.popular {
-      border-width: 2px;
     }
   }
 </style>
