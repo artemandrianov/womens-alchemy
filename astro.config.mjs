@@ -1,13 +1,11 @@
-// @ts-check
+// astro.config.mjs
 import path from 'node:path'
+import { defineConfig, passthroughImageService } from 'astro/config'
 
-import { defineConfig, passthroughImageService } from 'astro/config';
-
-import netlify from '@astrojs/netlify';
-
-// https://astro.build/config
 export default defineConfig({
-  output: 'server',
+  output: 'static',
+  
+  site: 'https://xn----7sbbreqalmle2c3c5hh.xn--p1ai',
 
   image: {
     service: passthroughImageService(),
@@ -24,14 +22,11 @@ export default defineConfig({
         name: 'ignore-nullbyte-paths',
         enforce: 'pre',
         resolveId(id) {
-          // Skip any Astro virtual modules (null byte in path)
           if (id.includes('\x00astro-entry:')) {
-            return id // leave untouched so Astro handles it
+            return id
           }
         },
       },
     ],
   },
-
-  adapter: netlify(),
-});
+})

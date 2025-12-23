@@ -1,71 +1,47 @@
 ---
-import { actions, isInputError } from "astro:actions"
 import { pricingPlans } from "../data/pricingData"
 import Button from "../components/Button.astro"
-
-const result = Astro.getActionResult(actions.submitForm)
-const inputErrors = isInputError(result?.error) ? result.error.fields : {}
 ---
 
 <section id="contact" class="full-width">
   <h1 class="title">Пора услышать свой<br>внутренний голос!</h1>
 
-  <form
-    method="POST"
-    action={actions.submitForm}
-    id="contact_us"
-    class="contact"
-    aria-live="polite"
-  >
+  <form id="contact_us" class="contact">
     <div class="form-group">
       <label for="name" class="visually-hidden">Имя и фамилия</label>
       <input
-        transition:persist
         id="name"
         name="name"
         placeholder="Имя Фамилия"
-        aria-describedby="error"
         required
       />
-      {inputErrors.name && <p id="error">{inputErrors.name.join(",")}</p>}
     </div>
 
     <div class="form-group">
       <label for="phone" class="visually-hidden">Телефон</label>
       <input
-        transition:persist
         id="phone"
         name="phone"
         type="tel"
         placeholder="Телефон"
-        aria-describedby="error"
         required
       />
-      {inputErrors.phone && <p id="error">{inputErrors.phone.join(",")}</p>}
     </div>
 
     <div class="form-group">
       <label for="email" class="visually-hidden">Электронная почта</label>
       <input
-        transition:persist
         id="email"
         name="email"
         type="email"
         placeholder="Почта"
-        aria-describedby="error"
         required
       />
-      {inputErrors.email && <p id="error">{inputErrors.email.join(",")}</p>}
     </div>
 
     <div class="form-group">
       <label for="pricing-select" class="visually-hidden">Выбор тарифа</label>
-      <select
-        id="pricing-select"
-        name="tariff"
-        aria-describedby="error"
-        required
-      >
+      <select id="pricing-select" name="tariff" required>
         <option value="">Выберите тариф</option>
         {
           pricingPlans.map((plan) => (
@@ -76,6 +52,8 @@ const inputErrors = isInputError(result?.error) ? result.error.fields : {}
         }
       </select>
     </div>
+
+    <div id="form-message" class="form-msg" style="display: none;"></div>
 
     <div class="form-actions">
       <Button
@@ -89,6 +67,8 @@ const inputErrors = isInputError(result?.error) ? result.error.fields : {}
 
 <script is:inline>
   (function () {
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVogQQxTwGuFqDp-b5y_lESjczS9ySyjs2LGt-i_eZc4PhH8hHN-LeWvjVUSPVqez3-A/exec";
+
     function applyTariffFromUrl(tariffFromEvent) {
       const select = document.getElementById("pricing-select");
       if (!select) return;
@@ -97,7 +77,6 @@ const inputErrors = isInputError(result?.error) ? result.error.fields : {}
         tariffFromEvent ??
         new URLSearchParams(window.location.search).get("tariff") ??
         "";
-
       const optionExists = Array.from(select.options).some(
         (o) => o.value === tariff,
       );
@@ -108,29 +87,65 @@ const inputErrors = isInputError(result?.error) ? result.error.fields : {}
       }
     }
 
-    function setupFormReset() {
-      const form = document.querySelector(".contact");
+    function setupFormHandling() {
+      const form = document.getElementById("contact_us");
+      const msgBox = document.getElementById("form-message");
+      const submitBtn = form.querySelector('button[type="submit"]');
+      
       if (!form) return;
-      form.addEventListener("submit", () => {
-        setTimeout(() => {
-          form.reset();
 
-          const url = new URL(window.location.href);
-          url.search = "";
-          window.history.replaceState({}, "", url);
-        }, 200);
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        
+        const btnText = submitBtn.innerText;
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Отправка...";
+        msgBox.style.display = 'none';
+
+        const formData = new FormData(form);
+        const data = {
+            name: formData.get("name"),
+            phone: formData.get("phone"),
+            email: formData.get("email"),
+            tariff: formData.get("tariff") || "",
+            date: new Date().toLocaleString("ru-RU")
+        };
+
+        try {
+            await fetch(GOOGLE_SCRIPT_URL, {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
+            });
+
+            msgBox.className = "form-msg success";
+            msgBox.innerText = "Спасибо! Ваша заявка отправлена.";
+            msgBox.style.display = "block";
+            form.reset();
+            
+            const url = new URL(window.location.href);
+            url.search = "";
+            window.history.replaceState({}, "", url);
+
+        } catch (error) {
+            console.error(error);
+            msgBox.className = "form-msg error";
+            msgBox.innerText = "Ошибка при отправке. Попробуйте написать нам в Telegram.";
+            msgBox.style.display = "block";
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = btnText;
+        }
       });
     }
 
     function init() {
       applyTariffFromUrl();
-      setupFormReset();
-
+      setupFormHandling();
       window.addEventListener("urlchange", (e) => {
         const ce = e;
         applyTariffFromUrl(ce.detail?.tariff);
       });
-
       window.addEventListener("popstate", () => applyTariffFromUrl());
     }
 
@@ -140,7 +155,7 @@ const inputErrors = isInputError(result?.error) ? result.error.fields : {}
       init();
     }
   })();
-
+  
   window.addEventListener("astro:after-swap", () => {
     window.history.replaceState({}, "", window.location.pathname);
   });
@@ -234,14 +249,12 @@ const inputErrors = isInputError(result?.error) ? result.error.fields : {}
     color: var(--clr-green-500, hsl(140, 60%, 45%));
     background: hsla(140, 60%, 90%, 0.3);
     border: 1px solid var(--clr-green-400, hsl(140, 60%, 60%));
-    box-shadow: 0 0 0.5rem hsla(140, 50%, 60%, 0.2);
   }
 
   .form-msg.error {
     color: var(--clr-red-500, hsl(0, 70%, 55%));
     background: hsla(0, 70%, 90%, 0.3);
     border: 1px solid var(--clr-red-400, hsl(0, 70%, 65%));
-    box-shadow: 0 0 0.5rem hsla(0, 70%, 60%, 0.2);
   }
 
   .visually-hidden {
